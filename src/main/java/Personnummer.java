@@ -1,10 +1,11 @@
-public class Personnummer {
+public final class Personnummer {
 
-    public boolean verify(String value) {
+
+    public static boolean verify(String value) {
         return false;
     }
 
-    public boolean verify(Long value) {
+    public static boolean verify(long value) {
         return false;
     }
 }
