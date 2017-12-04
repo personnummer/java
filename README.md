@@ -16,7 +16,7 @@ class Test {
 ```
 
 See [`src/test/java/PersonnummerTest.java`](src/test/java/PersonnummerTest.java) for more examples.
-__
+
 ## License
 
 [MIT](LICENSE)
