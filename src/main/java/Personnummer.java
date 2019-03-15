@@ -12,7 +12,7 @@ public final class Personnummer {
     private static final Pattern regexPattern;
 
     static {
-        regexPattern = Pattern.compile("(\\d{2}){0,1}(\\d{2})(\\d{2})(\\d{2})([-|+]{0,1})?(\\d{3})(\\d{0,1})");
+        regexPattern = Pattern.compile("(\\d{2})?(\\d{2})(\\d{2})(\\d{2})([-|+]?)?(\\d{3})(\\d?)");
     }
 
     /**
@@ -64,19 +64,19 @@ public final class Personnummer {
         // passed value. The checksum is returned and tested against the control number
         // in the social security number to make sure that it is a valid number.
 
-        int sum = 0;
         int temp;
+        int sum = 0;
 
-        for (int i=value.length();i-->0;) {
-            temp = value.charAt(i) - 48;
-            sum += (i % 2 == 0) ? ((temp *= 2) > 9 ? temp - 9 : temp) : temp;
+        for (int i = 0; i < value.length(); i++) {
+            temp = Character.getNumericValue(value.charAt(i));
+            temp *= 2 - (i % 2);
+            if (temp > 9)
+                temp -= 9;
+
+            sum += temp;
         }
 
-        if (sum != 0) {
-            sum = 10 - (sum % 10);
-        }
-
-        return sum;
+        return (int)(Math.ceil((double)sum / 10.0) * 10.0 - (double)sum);
     }
 
     private static boolean testDate(int year, int month, int day) {
