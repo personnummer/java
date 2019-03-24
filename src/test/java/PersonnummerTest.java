@@ -13,6 +13,7 @@ public class PersonnummerTest {
         assertTrue(Personnummer.valid("196408233234"));
         assertTrue(Personnummer.valid("0001010107"));
         assertTrue(Personnummer.valid("000101-0107"));
+        assertTrue(Personnummer.valid("1010101010"));
         assertTrue(Personnummer.valid(6403273813L));
         assertTrue(Personnummer.valid(5108189167L));
         assertTrue(Personnummer.valid(199001010017L));
