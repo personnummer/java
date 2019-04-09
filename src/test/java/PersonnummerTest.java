@@ -39,6 +39,7 @@ public class PersonnummerTest {
         assertFalse(Personnummer.valid("Two"));
         assertFalse(Personnummer.valid("222"));
         assertFalse(Personnummer.valid(null));
+        assertFalse(Personnummer.valid("9701063-2391"));
     }
 
     @Test
