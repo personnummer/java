@@ -14,6 +14,10 @@ public final class Personnummer {
     static {
         regexPattern = Pattern.compile("^(\\d{2})?(\\d{2})(\\d{2})(\\d{2})([-|+]?)?(\\d{3})(\\d?)$");
     }
+    
+    private Personnummer() {
+    	throw new AssertionError("Class cannot be instantiated");
+    }
 
     /**
      * Validate a Swedish social security number.
