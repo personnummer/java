@@ -53,16 +53,6 @@ public final class Personnummer {
         return (luhn == control) && (testDate(year, month, day) || testDate(year, month, day - 60));
     }
 
-    /**
-     * Validate a Swedish social security number.
-     *
-     * @param value Social security number to validate, as long.
-     * @return True if valid.
-     */
-    public static boolean valid(long value) {
-        return valid(Long.toString(value));
-    }
-
     private static int luhn(String value) {
         // Luhn/mod10 algorithm. Used to calculate a checksum from the
         // passed value. The checksum is returned and tested against the control number
