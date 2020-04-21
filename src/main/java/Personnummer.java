@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Class used to validate Swedish social security numbers.
+ * Class used to validate Swedish personal identity numbers.
  *
  * @author Johannes Tegnér
  */
@@ -14,15 +14,15 @@ public final class Personnummer {
     static {
         regexPattern = Pattern.compile("^(\\d{2})?(\\d{2})(\\d{2})(\\d{2})([-|+]?)?(\\d{3})(\\d?)$");
     }
-    
+
     private Personnummer() {
     	throw new AssertionError("Class cannot be instantiated");
     }
 
     /**
-     * Validate a Swedish social security number.
+     * Validate a Swedish personal identity number.
      *
-     * @param value Social security number to validate, as string.
+     * @param value personal identity number to validate, as string.
      * @return True if valid.
      */
     public static boolean valid(String value) {
@@ -54,9 +54,9 @@ public final class Personnummer {
     }
 
     /**
-     * Validate a Swedish social security number.
+     * Validate a Swedish personal identity number.
      *
-     * @param value Social security number to validate, as long.
+     * @param value personal identity number to validate, as long.
      * @return True if valid.
      */
     public static boolean valid(long value) {
@@ -66,7 +66,7 @@ public final class Personnummer {
     private static int luhn(String value) {
         // Luhn/mod10 algorithm. Used to calculate a checksum from the
         // passed value. The checksum is returned and tested against the control number
-        // in the social security number to make sure that it is a valid number.
+        // in the personal identity number to make sure that it is a valid number.
 
         int temp;
         int sum = 0;

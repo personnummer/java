@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/personnummer/java.svg?branch=master)](https://travis-ci.org/personnummer/java)
 
-Validate Swedish social security numbers 
+Validate Swedish personal identity numbers
 
 ## Example
 
@@ -10,7 +10,7 @@ Validate Swedish social security numbers
 class Test {
     public void main(String[] args){
         Personnummer.valid(6403273813L);     // => True
-        Personnummer.valid("19130401+2931"); // => True 
+        Personnummer.valid("19130401+2931"); // => True
     }
 }
 ```
