@@ -183,7 +183,7 @@ public final class Personnummer {
      * @return Formatted personal identity number.
      */
     public String format(boolean longFormat) {
-        return (longFormat ? this.fullYear : this.year) + this.month + this.day + separator() + numbers;
+        return (longFormat ? this.fullYear : this.year) + this.month + this.day + (longFormat ? "" : separator()) + numbers;
     }
 
     /**
