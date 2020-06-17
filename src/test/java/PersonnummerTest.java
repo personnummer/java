@@ -1,6 +1,5 @@
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -9,14 +8,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.*;
-import org.junit.runners.Parameterized;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-//@RunWith(Parameterized.class)
 public class PersonnummerTest {
     private static Boolean fileLoaded = false;
 

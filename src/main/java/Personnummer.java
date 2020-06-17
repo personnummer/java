@@ -12,7 +12,7 @@ public final class Personnummer {
     private static final Pattern regexPattern;
 
     static {
-        regexPattern = Pattern.compile("^(\\d{2})?(\\d{2})(\\d{2})(\\d{2})([-|+]?)?(\\d{3})(\\d?)$");
+        regexPattern = Pattern.compile("^(\\d{2})?(\\d{2})(\\d{2})(\\d{2})([-|+]?)?((?!000)\\d{3})(\\d?)$");
     }
 
     private Personnummer() {
