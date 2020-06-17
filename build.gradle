@@ -9,7 +9,7 @@ repositories {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    testCompile "junit:junit:4.12"
+    testCompile ("junit:junit:4.12", "org.json:json:20200518")
 }
 
 version = '0.1.0'
