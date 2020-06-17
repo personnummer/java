@@ -51,101 +51,6 @@ public final class Personnummer {
     private final boolean isMale;
     private final boolean isFemale;
 
-    /**
-     * Create a new Personnummber object from a string.
-     * In case options is not passed, they will default to accept any personal and coordination numbers.
-     *
-     * @param personnummer Personal identity number as a string to create the object from.
-     * @param options Options to use when creating the object.
-     * @throws PersonnummerException On parse error.
-     */
-    public Personnummer(String personnummer, Options options) throws PersonnummerException {
-        if (personnummer == null) {
-            throw new PersonnummerException();
-        }
-
-        Matcher matches = regexPattern.matcher(personnummer);
-        if (!matches.find()) {
-            throw new PersonnummerException();
-        }
-
-        String century;
-        String decade = matches.group(2);
-        if (matches.group(1) != null &&  !matches.group(1).isEmpty()) {
-            century = matches.group(1);
-        } else {
-            //        LocalDate date = LocalDate.parse(ssn.longFormat.substring(0, ssn.longFormat.length() - 4), DateTimeFormatter.ofPattern("yyyyMMdd"));
-            //        int years = (date.until(LocalDate.now())).getYears();
-            int born = LocalDate.now().getYear() - Integer.parseInt(decade);
-            if (!matches.group(5).isEmpty() && matches.group(5).equals("+")) {
-                born -= 100;
-            }
-
-            century = Integer.toString(born).substring(0, 2);
-        }
-
-        int day = Integer.parseInt(matches.group(4));
-        if (options.allowCoordinationNumber) {
-            day = day > 60 ? day - 60 : day;
-        } else if(day > 60) {
-            throw new PersonnummerException();
-        }
-
-        this.realDay = day;
-        this.century = century;
-        this.year = decade;
-        this.fullYear = century + decade;
-        this.month = matches.group(3);
-        this.day = matches.group(4);
-        this.numbers = matches.group(6) + matches.group(7);
-        this.controlNumber = matches.group(7);
-
-        this.isMale =  Integer.parseInt(Character.toString(this.numbers.charAt(2))) % 2 == 1;
-        this.isFemale = !this.isMale;
-
-        // The format passed to Luhn method is supposed to be YYmmDDNNN
-        // Hence all numbers that are less than 10 (or in last case 100) will have leading 0's added.
-        if (luhn(String.format("%s%s%s%s", this.year, this.month, this.day, matches.group(6))) != Integer.parseInt(this.controlNumber)) {
-            throw new PersonnummerException();
-        }
-    }
-
-    /**
-     * Create a new Personnummber object from a string.
-     * In case options is not passed, they will default to accept any personal and coordination numbers.
-     *
-     * @param personnummer Personal identity number as a string to create the object from.
-     * @throws PersonnummerException On parse error.
-     */
-    public Personnummer(String personnummer) throws PersonnummerException {
-        this(personnummer, new Options());
-    }
-
-    public int getAge() {
-        return (LocalDate.of(Integer.parseInt(this.fullYear), Integer.parseInt(this.month), this.realDay).until(LocalDate.now())).getYears();
-    }
-
-    /**
-     * Format the personal identity number into a valid string (YYMMDD-/+XXXX)
-     * If longFormat is true, it will include the century (YYYYMMDD-/+XXXX)
-     *
-     * @return Formatted personal identity number.
-     */
-    public String format() {
-        return format(false);
-    }
-
-    /**
-     * Format the personal identity number into a valid string (YYMMDD-/+XXXX)
-     * If longFormat is true, it will include the century (YYYYMMDD-/+XXXX)
-     *
-     * @param longFormat If century should be included.
-     * @return Formatted personal identity number.
-     */
-    public String format(boolean longFormat) {
-        return (longFormat ? this.fullYear : this.year) + this.month + this.day + separator() + numbers;
-    }
-
     public Boolean isMale() {
         return this.isMale;
     }
@@ -184,6 +89,101 @@ public final class Personnummer {
 
     public String getControlNumber() {
         return controlNumber;
+    }
+
+    public int getAge() {
+        return (LocalDate.of(Integer.parseInt(this.fullYear), Integer.parseInt(this.month), this.realDay).until(LocalDate.now())).getYears();
+    }
+
+    /**
+     * Create a new Personnummber object from a string.
+     * In case options is not passed, they will default to accept any personal and coordination numbers.
+     *
+     * @param personnummer Personal identity number as a string to create the object from.
+     * @param options Options to use when creating the object.
+     * @throws PersonnummerException On parse error.
+     */
+    public Personnummer(String personnummer, Options options) throws PersonnummerException {
+        if (personnummer == null) {
+            throw new PersonnummerException("Failed to parse personal identity number. Invalid input.");
+        }
+
+        Matcher matches = regexPattern.matcher(personnummer);
+        if (!matches.find()) {
+            throw new PersonnummerException("Failed to parse personal identity number. Invalid input.");
+        }
+
+        String century;
+        String decade = matches.group(2);
+        if (matches.group(1) != null &&  !matches.group(1).isEmpty()) {
+            century = matches.group(1);
+        } else {
+            //        LocalDate date = LocalDate.parse(ssn.longFormat.substring(0, ssn.longFormat.length() - 4), DateTimeFormatter.ofPattern("yyyyMMdd"));
+            //        int years = (date.until(LocalDate.now())).getYears();
+            int born = LocalDate.now().getYear() - Integer.parseInt(decade);
+            if (!matches.group(5).isEmpty() && matches.group(5).equals("+")) {
+                born -= 100;
+            }
+
+            century = Integer.toString(born).substring(0, 2);
+        }
+
+        int day = Integer.parseInt(matches.group(4));
+        if (options.allowCoordinationNumber) {
+            day = day > 60 ? day - 60 : day;
+        } else if(day > 60) {
+            throw new PersonnummerException("Invalid personal identity number.");
+        }
+
+        this.realDay = day;
+        this.century = century;
+        this.year = decade;
+        this.fullYear = century + decade;
+        this.month = matches.group(3);
+        this.day = matches.group(4);
+        this.numbers = matches.group(6) + matches.group(7);
+        this.controlNumber = matches.group(7);
+
+        this.isMale =  Integer.parseInt(Character.toString(this.numbers.charAt(2))) % 2 == 1;
+        this.isFemale = !this.isMale;
+
+        // The format passed to Luhn method is supposed to be YYmmDDNNN
+        // Hence all numbers that are less than 10 (or in last case 100) will have leading 0's added.
+        if (luhn(String.format("%s%s%s%s", this.year, this.month, this.day, matches.group(6))) != Integer.parseInt(this.controlNumber)) {
+            throw new PersonnummerException("Invalid personal identity number.");
+        }
+    }
+
+    /**
+     * Create a new Personnummber object from a string.
+     * In case options is not passed, they will default to accept any personal and coordination numbers.
+     *
+     * @param personnummer Personal identity number as a string to create the object from.
+     * @throws PersonnummerException On parse error.
+     */
+    public Personnummer(String personnummer) throws PersonnummerException {
+        this(personnummer, new Options());
+    }
+
+    /**
+     * Format the personal identity number into a valid string (YYMMDD-/+XXXX)
+     * If longFormat is true, it will include the century (YYYYMMDD-/+XXXX)
+     *
+     * @return Formatted personal identity number.
+     */
+    public String format() {
+        return format(false);
+    }
+
+    /**
+     * Format the personal identity number into a valid string (YYMMDD-/+XXXX)
+     * If longFormat is true, it will include the century (YYYYMMDD-/+XXXX)
+     *
+     * @param longFormat If century should be included.
+     * @return Formatted personal identity number.
+     */
+    public String format(boolean longFormat) {
+        return (longFormat ? this.fullYear : this.year) + this.month + this.day + separator() + numbers;
     }
 
     /**
