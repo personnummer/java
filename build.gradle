@@ -17,8 +17,8 @@ dependencies {
     testCompile ("junit:junit:4.12", "org.json:json:20200518")
 }
 
-version = '0.1.0'
 
+version = System.getenv("RELEASE_VERSION")
 jar {
     manifest {
         attributes('Implementation-Title': project.name,
@@ -46,7 +46,10 @@ publishing {
     }
     publications {
         gpr(MavenPublication) {
-            from(components.java)
+            version = System.getenv("RELEASE_VERSION")
+            groupId = 'dev.personnummer'
+
+            from components.java
         }
     }
 }
