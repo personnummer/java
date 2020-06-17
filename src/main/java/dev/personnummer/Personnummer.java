@@ -1,14 +1,8 @@
 package dev.personnummer;
 
-import javax.swing.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static java.time.format.DateTimeFormatter.ofPattern;
 
 /**
  * Class used to validate Swedish personal identity numbers.
@@ -22,21 +16,29 @@ public final class Personnummer {
         regexPattern = Pattern.compile("^(\\d{2})?(\\d{2})(\\d{2})(\\d{2})([-|+]?)?((?!000)\\d{3})(\\d?)$");
     }
 
+    /**
+     * Create a new Personnummber object from a string.
+     * In case options is not passed, they will default to accept any personal and coordination numbers.
+     *
+     * @param personnummer Personal identity number as a string to create the object from.
+     * @param options Options to use when creating the object.
+     * @throws PersonnummerException On parse error.
+     */
     public static Personnummer parse(String personnummer, Options options) throws PersonnummerException {
         return new Personnummer(personnummer, options);
     }
 
+    /**
+     * Create a new Personnummber object from a string.
+     * In case options is not passed, they will default to accept any personal and coordination numbers.
+     *
+     * @param personnummer Personal identity number as a string to create the object from.
+     * @throws PersonnummerException On parse error.
+     */
     public static Personnummer parse(String personnummer) throws PersonnummerException {
         return parse(personnummer, new Options());
     }
 
-    public static Personnummer parse(Long personnummer, Options options) throws PersonnummerException {
-        return parse(Long.toString(personnummer), options);
-    }
-
-    public static Personnummer parse(Long personnummer) throws PersonnummerException {
-        return parse(personnummer, new Options());
-    }
 
     private final int realDay;
     private final String fullYear;
@@ -49,8 +51,14 @@ public final class Personnummer {
     private final boolean isMale;
     private final boolean isFemale;
 
-
-
+    /**
+     * Create a new Personnummber object from a string.
+     * In case options is not passed, they will default to accept any personal and coordination numbers.
+     *
+     * @param personnummer Personal identity number as a string to create the object from.
+     * @param options Options to use when creating the object.
+     * @throws PersonnummerException On parse error.
+     */
     public Personnummer(String personnummer, Options options) throws PersonnummerException {
         if (personnummer == null) {
             throw new PersonnummerException();
@@ -102,15 +110,14 @@ public final class Personnummer {
         }
     }
 
+    /**
+     * Create a new Personnummber object from a string.
+     * In case options is not passed, they will default to accept any personal and coordination numbers.
+     *
+     * @param personnummer Personal identity number as a string to create the object from.
+     * @throws PersonnummerException On parse error.
+     */
     public Personnummer(String personnummer) throws PersonnummerException {
-        this(personnummer, new Options());
-    }
-
-    public Personnummer(Long personnummer, Options options) throws PersonnummerException {
-        this(Long.toString(personnummer), options);
-    }
-
-    public Personnummer(Long personnummer) throws PersonnummerException {
         this(personnummer, new Options());
     }
 
@@ -118,10 +125,23 @@ public final class Personnummer {
         return (LocalDate.of(Integer.parseInt(this.fullYear), Integer.parseInt(this.month), this.realDay).until(LocalDate.now())).getYears();
     }
 
+    /**
+     * Format the personal identity number into a valid string (YYMMDD-/+XXXX)
+     * If longFormat is true, it will include the century (YYYYMMDD-/+XXXX)
+     *
+     * @return Formatted personal identity number.
+     */
     public String format() {
         return format(false);
     }
 
+    /**
+     * Format the personal identity number into a valid string (YYMMDD-/+XXXX)
+     * If longFormat is true, it will include the century (YYYYMMDD-/+XXXX)
+     *
+     * @param longFormat If century should be included.
+     * @return Formatted personal identity number.
+     */
     public String format(boolean longFormat) {
         return (longFormat ? this.fullYear : this.year) + this.month + this.day + separator() + numbers;
     }
@@ -199,17 +219,6 @@ public final class Personnummer {
         }
 
         return (int)(Math.ceil((double)sum / 10.0) * 10.0 - (double)sum);
-    }
-
-    private static boolean testDate(int year, int month, int day) {
-        try {
-            DateFormat df = new SimpleDateFormat("yy-MM-dd");
-            df.setLenient(false);
-            df.parse(String.format("%02d-%02d-%02d", year, month, day));
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
     }
 
 }
