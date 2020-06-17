@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class DataProvider {
     private static final List<PersonnummerData> all = new ArrayList<>();
 
-    public static void Initialize() throws IOException {
+    public static void initialize() throws IOException {
         InputStream in = new URL("https://raw.githubusercontent.com/personnummer/meta/master/testdata/list.json").openStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String json = "";

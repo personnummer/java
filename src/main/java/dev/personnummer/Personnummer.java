@@ -1,27 +1,79 @@
+package dev.personnummer;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 /**
  * Class used to validate Swedish personal identity numbers.
  *
  * @author Johannes Tegnér
  */
 public final class Personnummer {
+
+
     private static final Pattern regexPattern;
 
     static {
         regexPattern = Pattern.compile("^(\\d{2})?(\\d{2})(\\d{2})(\\d{2})([-|+]?)?((?!000)\\d{3})(\\d?)$");
     }
 
-    private final Integer realDay;
-
-
-
-    private Personnummer() {
-    	throw new AssertionError("Class cannot be instantiated");
+    public static Personnummer parse(String personnummer, Options options) {
+        return new Personnummer(personnummer, options);
     }
+
+    public static Personnummer parse(String personnummer) {
+        return parse(personnummer, new Options());
+    }
+
+    public static Personnummer parse(Long personnummer, Options options) {
+        return parse(Long.toString(personnummer), options);
+    }
+
+    public static Personnummer parse(Long personnummer) {
+        return parse(personnummer, new Options());
+    }
+
+    public Personnummer(String personnummer, Options options) {
+
+    }
+
+    public Personnummer(String personnummer) {
+        this(personnummer, new Options());
+    }
+
+    public Personnummer(Long personnummer, Options options) {
+        this(Long.toString(personnummer), options);
+    }
+
+    public Personnummer(Long personnummer) {
+        this(personnummer, new Options());
+    }
+
+    public int getAge() {
+        return -1;
+    }
+
+    public String format() {
+        return format(false);
+    }
+
+    public String format(boolean longFormat) {
+        return "";
+    }
+
+    public Boolean isMale() {
+        return null;
+    }
+
+    public Boolean isFemale() {
+        return null;
+    }
+
+    public String separator() {
+        return "+";
+    }
+
 
     /**
      * Validate a Swedish personal identity number.
