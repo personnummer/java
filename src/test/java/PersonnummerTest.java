@@ -1,6 +1,3 @@
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -10,11 +7,50 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class PersonnummerTest {
+    //region Static setup stuff!
     private static Boolean fileLoaded = false;
+
+    public static List<Long> getValidSsnInt() {
+        return validSsnInt;
+    }
+
+    public static List<String> getValidSsnString() {
+        return validSsnString;
+    }
+
+    public static List<Long> getInvalidSsnInt() {
+        return invalidSsnInt;
+    }
+
+    public static List<String> getInvalidSsnString() {
+        return invalidSsnString;
+    }
+
+    public static List<Long> getValidConInt() {
+        return validConInt;
+    }
+
+    public static List<String> getValidConString() {
+        return validConString;
+    }
+
+    public static List<Long> getInvalidConInt() {
+        return invalidConInt;
+    }
+
+    public static List<String> getInvalidConString() {
+        return invalidConString;
+    }
 
     private static List<Long> validSsnInt = new ArrayList<>();
     private static List<String> validSsnString = new ArrayList<>();
@@ -25,12 +61,12 @@ public class PersonnummerTest {
     private static List<Long> invalidConInt = new ArrayList<>();
     private static List<String> invalidConString = new ArrayList<>();
 
-    @AfterClass
+    @AfterAll
     public static void deleteTestData() throws IOException {
         Files.delete(Paths.get("temp.json"));
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void loadTestData() throws IOException {
         if (fileLoaded) {
             return;
@@ -48,19 +84,21 @@ public class PersonnummerTest {
         JSONObject ssn = json.getJSONObject("ssn");
         JSONObject con = json.getJSONObject("con");
 
-        validSsnInt = getIntList(ssn, "integer", "valid");
-        invalidSsnInt = getIntList(ssn, "integer", "invalid");
-        validSsnString = getStringList(ssn, "string", "valid");
-        invalidSsnString = getStringList(ssn, "string", "invalid");
+        validSsnInt = getIntList(ssn, "valid");
+        invalidSsnInt = getIntList(ssn, "invalid");
+        validSsnString = getStringList(ssn, "valid");
+        invalidSsnString = getStringList(ssn, "invalid");
 
-        validConInt = getIntList(con, "integer", "valid");
-        invalidConInt = getIntList(con, "integer", "invalid");
-        validConString = getStringList(con, "string", "valid");
-        invalidConString = getStringList(con, "string", "invalid");
+        validConInt = getIntList(con, "valid");
+        invalidConInt = getIntList(con, "invalid");
+        validConString = getStringList(con, "valid");
+        invalidConString = getStringList(con, "invalid");
     }
 
-    private static ArrayList<String> getStringList(JSONObject root, String dataType, String valid) {
-        JSONArray arr = root.getJSONObject(dataType).getJSONArray(valid);
+    //endregion
+
+    private static ArrayList<String> getStringList(JSONObject root, String valid) {
+        JSONArray arr = root.getJSONObject("string").getJSONArray(valid);
         ArrayList<String> result = new ArrayList<>();
         for (int i=0; i<arr.length(); i++) {
             result.add(arr.getString(i));
@@ -68,8 +106,8 @@ public class PersonnummerTest {
         return result;
     }
 
-    private static ArrayList<Long> getIntList(JSONObject root, String dataType, String valid) {
-        JSONArray arr = root.getJSONObject(dataType).getJSONArray(valid);
+    private static ArrayList<Long> getIntList(JSONObject root, String valid) {
+        JSONArray arr = root.getJSONObject("integer").getJSONArray(valid);
         ArrayList<Long> result = new ArrayList<>();
         for (int i=0; i<arr.length(); i++) {
             result.add(arr.getLong(i));
@@ -77,60 +115,29 @@ public class PersonnummerTest {
         return result;
     }
 
-    @Test
-    public void testPersonnNummerWithInvalidIntegerValues() {
-        for (Long ssn: invalidSsnInt) {
-            assertFalse(Personnummer.valid(ssn));
-        }
+    @ParameterizedTest
+    @MethodSource({"getInvalidSsnInt", "getInvalidConInt"})
+    public void testInvalidIntegerValues(long ssn) {
+        assertFalse(Personnummer.valid(ssn));
     }
 
-    @Test
-    public void testCoordinationNummerWithInvalidIntegerValues() {
-        for (Long ssn: invalidConInt) {
-            assertFalse(Personnummer.valid(ssn));
-        }
+    @ParameterizedTest
+    @MethodSource({"getInvalidConString", "getInvalidSsnString"})
+    public void testInvalidStringValues(String ssn) {
+        assertFalse(Personnummer.valid(ssn));
     }
 
-    @Test
-    public void testPersonnNummerWithInvalidStringValues() {
-        for (String ssn: invalidSsnString) {
-            assertFalse(Personnummer.valid(ssn));
-        }
+    @ParameterizedTest
+    @MethodSource({"getValidConInt", "getValidSsnInt"})
+    public void testValidIntegerValues(Long ssn) {
+        assertTrue(Personnummer.valid(ssn));
     }
 
-    @Test
-    public void testCoordinationNummerWithInvalidStringValues() {
-        for (String ssn: invalidConString) {
-            assertFalse(Personnummer.valid(ssn));
-        }
-    }
 
-    @Test
-    public void testPersonnNummerWithValidIntegerValues() {
-        for (Long ssn: validSsnInt) {
-            assertTrue(Personnummer.valid(ssn));
-        }
-    }
-
-    @Test
-    public void testCoordinationNummerVnvalidIntegerValues() {
-        for (Long ssn: validConInt) {
-            assertTrue(Personnummer.valid(ssn));
-        }
-    }
-
-    @Test
-    public void testPersonnNummerWithValidStringValues() {
-        for (String ssn: validSsnString) {
-            assertTrue(Personnummer.valid(ssn));
-        }
-    }
-
-    @Test
-    public void testCoordinationNummerWithValidStringValues() {
-        for (String ssn: validConString) {
-            assertTrue(Personnummer.valid(ssn));
-        }
+    @ParameterizedTest
+    @MethodSource({"getValidConString", "getValidSsnString"})
+    public void testValidStringValues(String ssn) {
+        assertTrue(Personnummer.valid(ssn));
     }
 
 }
