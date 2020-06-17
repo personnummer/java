@@ -30,3 +30,4 @@ build/
 .classpath
 .project
 .settings/
+temp.json
