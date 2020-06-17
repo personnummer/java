@@ -115,6 +115,10 @@ public class PersonnummerTest {
         return result;
     }
 
+    public void testConstructor(String ssn) {}
+
+
+
     @ParameterizedTest
     @MethodSource({"getInvalidSsnInt", "getInvalidConInt"})
     public void testInvalidIntegerValues(long ssn) {

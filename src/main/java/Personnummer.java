@@ -15,6 +15,10 @@ public final class Personnummer {
         regexPattern = Pattern.compile("^(\\d{2})?(\\d{2})(\\d{2})(\\d{2})([-|+]?)?((?!000)\\d{3})(\\d?)$");
     }
 
+    private final Integer realDay;
+
+
+
     private Personnummer() {
     	throw new AssertionError("Class cannot be instantiated");
     }
