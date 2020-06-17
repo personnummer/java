@@ -44,7 +44,7 @@ public class PersonnummerTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"DataProvider#getInvalidCoordinationNumbers", "DataProvider#getValidPersonnummer"})
+    @MethodSource({"DataProvider#getInvalidCoordinationNumbers"})
     public void testConstructorCoordInvalid(PersonnummerData ssn) {
         assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.longFormat, new Options(true)));
         assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.shortFormat, new Options(true)));
@@ -91,7 +91,7 @@ public class PersonnummerTest {
 
     @ParameterizedTest
     @MethodSource({"DataProvider#getValidPersonnummer"})
-    public void testAge(PersonnummerData ssn) {
+    public void testAge(PersonnummerData ssn) throws PersonnummerException {
         LocalDate date = LocalDate.parse(ssn.longFormat.substring(0, ssn.longFormat.length() - 4), DateTimeFormatter.ofPattern("yyyyMMdd"));
         int years = (date.until(LocalDate.now())).getYears();
 
@@ -103,7 +103,7 @@ public class PersonnummerTest {
 
     @ParameterizedTest
     @MethodSource({"DataProvider#getValidCoordinationNumbers"})
-    public void testAgeCn(PersonnummerData ssn) {
+    public void testAgeCn(PersonnummerData ssn) throws PersonnummerException {
         String strDay = ssn.longFormat.substring(ssn.longFormat.length() - 6, ssn.longFormat.length() - 4);
         int day = Integer.parseInt(strDay) - 60;
         strDay = day < 10 ? "0" + Integer.toString(day) : Integer.toString(day);
@@ -119,15 +119,15 @@ public class PersonnummerTest {
 
     @ParameterizedTest
     @MethodSource({"DataProvider#getValidPersonnummer", "DataProvider#getValidCoordinationNumbers"})
-    public void testFormat(PersonnummerData ssn) {
-        assertEquals(ssn.separatedLong, Personnummer.parse(ssn.separatedLong, new Options(true)).format());
-        assertEquals(ssn.separatedLong, Personnummer.parse(ssn.separatedFormat, new Options(true)).format());
-        assertEquals(ssn.separatedLong, Personnummer.parse(ssn.longFormat, new Options(true)).format());
+    public void testFormat(PersonnummerData ssn) throws PersonnummerException {
+        assertEquals(ssn.separatedFormat, Personnummer.parse(ssn.separatedLong, new Options(true)).format());
+        assertEquals(ssn.separatedFormat, Personnummer.parse(ssn.separatedFormat, new Options(true)).format());
+        assertEquals(ssn.separatedFormat, Personnummer.parse(ssn.longFormat, new Options(true)).format());
     }
 
     @ParameterizedTest
     @MethodSource({"DataProvider#getValidPersonnummer", "DataProvider#getValidCoordinationNumbers"})
-    public void testFormatLong(PersonnummerData ssn) {
+    public void testFormatLong(PersonnummerData ssn) throws PersonnummerException {
         assertEquals(ssn.separatedLong, Personnummer.parse(ssn.separatedLong, new Options(true)).format(true));
         assertEquals(ssn.separatedLong, Personnummer.parse(ssn.separatedFormat, new Options(true)).format(true));
         assertEquals(ssn.separatedLong, Personnummer.parse(ssn.longFormat, new Options(true)).format(true));
@@ -153,7 +153,7 @@ public class PersonnummerTest {
 
     @ParameterizedTest
     @MethodSource({"DataProvider#getValidPersonnummer", "DataProvider#getValidCoordinationNumbers"})
-    public void testMaleFemale(PersonnummerData ssn) {
+    public void testMaleFemale(PersonnummerData ssn) throws PersonnummerException {
         assertEquals(ssn.isMale, Personnummer.parse(ssn.longFormat, new Options(true)).isMale());
         assertEquals(ssn.isMale, Personnummer.parse(ssn.separatedLong, new Options(true)).isMale());
         assertEquals(ssn.isMale, Personnummer.parse(ssn.separatedFormat, new Options(true)).isMale());
@@ -167,8 +167,7 @@ public class PersonnummerTest {
 
     @ParameterizedTest
     @MethodSource({"DataProvider#getValidPersonnummer", "DataProvider#getValidCoordinationNumbers"})
-    public void testSeparator(PersonnummerData ssn)
-    {
+    public void testSeparator(PersonnummerData ssn) throws PersonnummerException {
         String sep = ssn.separatedFormat.contains("+") ? "+" : "-";
         assertEquals(sep, Personnummer.parse(ssn.longFormat, new Options(true)).separator());
         assertEquals(sep, Personnummer.parse(ssn.separatedLong, new Options(true)).separator());
