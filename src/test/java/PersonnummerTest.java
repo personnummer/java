@@ -1,3 +1,4 @@
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import java.io.IOException;
@@ -24,6 +25,10 @@ public class PersonnummerTest {
     private static List<Long> invalidConInt = new ArrayList<>();
     private static List<String> invalidConString = new ArrayList<>();
 
+    @AfterClass
+    public static void deleteTestData() throws IOException {
+        Files.delete(Paths.get("temp.json"));
+    }
 
     @BeforeClass
     public static void loadTestData() throws IOException {
