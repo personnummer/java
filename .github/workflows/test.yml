@@ -1,3 +1,4 @@
+name: Test
 on:
   push:
   pull_request:
@@ -8,7 +9,7 @@ jobs:
     strategy:
       matrix:
         java: [ 8, 10, 12, 13 ]
-    name: Java ${{ matrix.java }} sample
+    name: Java ${{ matrix.java }} test.
     steps:
       - uses: actions/checkout@v2
       - name: Setup java

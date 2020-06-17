@@ -1,5 +1,10 @@
+plugins {
+    id("maven-publish")
+}
+
 apply plugin: 'java-library'
 apply plugin: 'java'
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -25,5 +30,23 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/personnummer/java")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
     }
 }
