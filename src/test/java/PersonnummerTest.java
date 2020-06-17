@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class PersonnummerTest {
 
+
+
     @Test
     public void testWithControlDigit() {
         assertTrue(Personnummer.valid("6403273813"));
