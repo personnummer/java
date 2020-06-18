@@ -118,8 +118,6 @@ public final class Personnummer {
         if (matches.group(1) != null &&  !matches.group(1).isEmpty()) {
             century = matches.group(1);
         } else {
-            //        LocalDate date = LocalDate.parse(ssn.longFormat.substring(0, ssn.longFormat.length() - 4), DateTimeFormatter.ofPattern("yyyyMMdd"));
-            //        int years = (date.until(LocalDate.now())).getYears();
             int born = LocalDate.now().getYear() - Integer.parseInt(decade);
             if (!matches.group(5).isEmpty() && matches.group(5).equals("+")) {
                 born -= 100;
