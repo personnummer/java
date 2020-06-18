@@ -128,9 +128,9 @@ public class PersonnummerTest {
     @ParameterizedTest
     @MethodSource({"DataProvider#getValidPersonnummer", "DataProvider#getValidCoordinationNumbers"})
     public void testFormatLong(PersonnummerData ssn) throws PersonnummerException {
-        assertEquals(ssn.separatedLong, Personnummer.parse(ssn.separatedLong, new Options(true)).format(true));
-        assertEquals(ssn.separatedLong, Personnummer.parse(ssn.separatedFormat, new Options(true)).format(true));
-        assertEquals(ssn.separatedLong, Personnummer.parse(ssn.longFormat, new Options(true)).format(true));
+        assertEquals(ssn.longFormat, Personnummer.parse(ssn.separatedLong, new Options(true)).format(true));
+        assertEquals(ssn.longFormat, Personnummer.parse(ssn.separatedFormat, new Options(true)).format(true));
+        assertEquals(ssn.longFormat, Personnummer.parse(ssn.longFormat, new Options(true)).format(true));
     }
 
     @ParameterizedTest
