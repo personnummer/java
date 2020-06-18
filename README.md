@@ -1,22 +1,91 @@
 # Personnummer
 
-[![Build Status](https://travis-ci.org/personnummer/java.svg?branch=master)](https://travis-ci.org/personnummer/java)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/personnummer/java/Test)](https://github.com/personnummer/java/actions)
 
-Validate Swedish personal identity numbers
+Validate Swedish personal identity numbers.
 
-## Example
+## Installation
 
-```java
-class Test {
-    public void main(String[] args){
-        Personnummer.valid(6403273813L);     // => True
-        Personnummer.valid("19130401+2931"); // => True
+Add the github repository as a Maven or Gradle repository:  
+
+```xml
+<dependency>
+  <groupId>dev.personnummer</groupId>
+  <artifactId>personnummer</artifactId>
+  <version>3.*.*</version>
+</dependency> 
+```
+
+```groovy
+plugins {
+    id 'maven'
+}
+
+repositories {
+    maven {
+      url "https://github.com/personnummer/java:personnummer"
     }
+}
+
+dependencies {
+    configuration("dev.personnummer:personnummer")
 }
 ```
 
-See [`src/test/java/PersonnummerTest.java`](src/test/java/PersonnummerTest.java) for more examples.
+For more information on how to install and authenticate with github packages, check [this link](https://help.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-apache-maven-for-use-with-github-packages).
+
+## Examples
+
+### Validation
+
+```java
+import dev.personnummer.*;
+
+class Test 
+{
+  public void TestValidation() 
+  {
+    Personnummer.valid("191212121212");    // => True
+    Personnummer.valid("12121+21212");     // => True
+    Personnummer.valid("2012121-21212");   // => True
+  }
+}
+```
+
+### Format
+
+```java
+// Short format (YYMMDD-XXXX)
+(new Personnummer("1212121212")).format();
+// => 121212-1212
+
+// Short format for 100+ years old
+(new Personnummer("191212121212")).format();
+//=> 121212+1212
+
+// Long format (YYYYMMDDXXXX)
+Personnummer.parse("1212121212").format(true);
+//=> 201212121212
+```
+
+### Age
+
+```java
+(new Personnummer("1212121212")).getAge();
+//=> 7
+```
+
+### Get sex
+
+```java
+(new Personnummer("1212121212")).isMale();
+//=> true
+Personnummer.parse("1212121212").isFemale();
+//=> false
+```
+
+See `src/test//PersonnummerTest.java` for more examples.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/personnummer/java/blob/master/LICENSE)

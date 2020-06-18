@@ -1,0 +1,57 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class DataProvider {
+    private static final List<PersonnummerData> all = new ArrayList<>();
+
+    public static void initialize() throws IOException {
+        InputStream in = new URL("https://raw.githubusercontent.com/personnummer/meta/master/testdata/list.json").openStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String json = "";
+        String line;
+        while ((line = reader.readLine()) != null) {
+            json = json.concat(line);
+        }
+        JSONArray rootObject = new JSONArray(json);
+        for (int i = 0; i < rootObject.length(); i++) {
+            JSONObject current = rootObject.getJSONObject(i);
+            all.add(new PersonnummerData(
+                    current.getLong("integer"),
+                    current.getString("long_format"),
+                    current.getString("short_format"),
+                    current.getString("separated_format"),
+                    current.getString("separated_long"),
+                    current.getBoolean("valid"),
+                    current.getString("type"),
+                    current.getBoolean("isMale"),
+                    current.getBoolean("isFemale")
+            ));
+        }
+    }
+
+    public static List<PersonnummerData> getCoordinationNumbers() {
+        return all.stream().filter(o -> !o.type.equals("ssn")).collect(Collectors.toList());
+    }
+    public static List<PersonnummerData> getPersonnummer() {
+        return all.stream().filter(o -> o.type.equals("ssn")).collect(Collectors.toList());
+    }
+    public static List<PersonnummerData> getInvalidCoordinationNumbers() {
+        return getCoordinationNumbers().stream().filter(o -> !o.valid).collect(Collectors.toList());
+    }
+    public static List<PersonnummerData> getInvalidPersonnummer() {
+        return getPersonnummer().stream().filter(o -> !o.valid).collect(Collectors.toList());
+    }
+    public static List<PersonnummerData> getValidCoordinationNumbers() {
+        return getCoordinationNumbers().stream().filter(o -> o.valid).collect(Collectors.toList());
+    }
+    public static List<PersonnummerData> getValidPersonnummer() {
+        return getPersonnummer().stream().filter(o -> o.valid).collect(Collectors.toList());
+    }
+
+}

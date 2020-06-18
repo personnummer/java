@@ -1,20 +1,19 @@
 plugins {
-    id("maven-publish")
+    id 'maven-publish'
+    id 'java-library'
+    id 'java'
 }
-
-apply plugin: 'java-library'
-apply plugin: 'java'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.12'
-    testCompile ("junit:junit:4.12", "org.json:json:20200518")
+    testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
+    testCompile('org.junit.jupiter:junit-jupiter:5.6.2', "org.json:json:20200518")
 }
 
 
@@ -27,6 +26,7 @@ jar {
 }
 
 test {
+    useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
         exceptionFormat "full"

@@ -1,136 +1,178 @@
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-import org.json.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import dev.personnummer.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PersonnummerTest {
-    private static Boolean fileLoaded = false;
 
-    private static List<Long> validSsnInt = new ArrayList<>();
-    private static List<String> validSsnString = new ArrayList<>();
-    private static List<Long> invalidSsnInt = new ArrayList<>();
-    private static List<String> invalidSsnString = new ArrayList<>();
-    private static List<Long> validConInt = new ArrayList<>();
-    private static List<String> validConString = new ArrayList<>();
-    private static List<Long> invalidConInt = new ArrayList<>();
-    private static List<String> invalidConString = new ArrayList<>();
-
-    @AfterClass
-    public static void deleteTestData() throws IOException {
-        Files.delete(Paths.get("temp.json"));
+    @BeforeAll
+    public static void setup() throws IOException {
+        DataProvider.initialize();
     }
 
-    @BeforeClass
-    public static void loadTestData() throws IOException {
-        if (fileLoaded) {
-            return;
-        }
-
-        if (!Files.exists(Paths.get("temp.json"))) {
-            InputStream in = new URL("https://raw.githubusercontent.com/personnummer/meta/master/testdata/structured.json").openStream();
-            Files.copy(in, Paths.get("temp.json"), StandardCopyOption.REPLACE_EXISTING);
-            fileLoaded = true;
-        }
-
-        String jsonString = new String(Files.readAllBytes(Paths.get("temp.json")));
-        JSONObject json = new JSONObject(jsonString);
-
-        JSONObject ssn = json.getJSONObject("ssn");
-        JSONObject con = json.getJSONObject("con");
-
-        validSsnInt = getIntList(ssn, "integer", "valid");
-        invalidSsnInt = getIntList(ssn, "integer", "invalid");
-        validSsnString = getStringList(ssn, "string", "valid");
-        invalidSsnString = getStringList(ssn, "string", "invalid");
-
-        validConInt = getIntList(con, "integer", "valid");
-        invalidConInt = getIntList(con, "integer", "invalid");
-        validConString = getStringList(con, "string", "valid");
-        invalidConString = getStringList(con, "string", "invalid");
+    @ParameterizedTest
+    @MethodSource("DataProvider#getValidPersonnummer")
+    public void testConstructor(PersonnummerData ssn) {
+        assertDoesNotThrow(() -> new Personnummer(ssn.longFormat, new Options(false)));
+        assertDoesNotThrow(() -> new Personnummer(ssn.shortFormat, new Options(false)));
+        assertDoesNotThrow(() -> new Personnummer(ssn.separatedFormat, new Options(false)));
+        assertDoesNotThrow(() -> new Personnummer(ssn.separatedFormat, new Options(false)));
     }
 
-    private static ArrayList<String> getStringList(JSONObject root, String dataType, String valid) {
-        JSONArray arr = root.getJSONObject(dataType).getJSONArray(valid);
-        ArrayList<String> result = new ArrayList<>();
-        for (int i=0; i<arr.length(); i++) {
-            result.add(arr.getString(i));
-        }
-        return result;
+    @ParameterizedTest
+    @MethodSource("DataProvider#getValidCoordinationNumbers")
+    public void testConstructorCoord(PersonnummerData ssn) {
+        assertDoesNotThrow(() -> new Personnummer(ssn.longFormat, new Options(true)));
+        assertDoesNotThrow(() -> new Personnummer(ssn.shortFormat, new Options(true)));
+        assertDoesNotThrow(() -> new Personnummer(ssn.separatedFormat, new Options(true)));
+        assertDoesNotThrow(() -> new Personnummer(ssn.separatedFormat, new Options(true)));
     }
 
-    private static ArrayList<Long> getIntList(JSONObject root, String dataType, String valid) {
-        JSONArray arr = root.getJSONObject(dataType).getJSONArray(valid);
-        ArrayList<Long> result = new ArrayList<>();
-        for (int i=0; i<arr.length(); i++) {
-            result.add(arr.getLong(i));
-        }
-        return result;
+    @ParameterizedTest
+    @MethodSource({"DataProvider#getInvalidPersonnummer", "DataProvider#getValidCoordinationNumbers"})
+    public void testConstructorInvalid(PersonnummerData ssn) {
+        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.longFormat, new Options(false)));
+        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.shortFormat, new Options(false)));
+        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.separatedFormat, new Options(false)));
+        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.separatedFormat, new Options(false)));
     }
 
-    @Test
-    public void testPersonnNummerWithInvalidIntegerValues() {
-        for (Long ssn: invalidSsnInt) {
-            assertFalse(Personnummer.valid(ssn));
-        }
+    @ParameterizedTest
+    @MethodSource({"DataProvider#getInvalidCoordinationNumbers"})
+    public void testConstructorCoordInvalid(PersonnummerData ssn) {
+        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.longFormat, new Options(true)));
+        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.shortFormat, new Options(true)));
+        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.separatedFormat, new Options(true)));
+        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.separatedFormat, new Options(true)));
     }
 
-    @Test
-    public void testCoordinationNummerWithInvalidIntegerValues() {
-        for (Long ssn: invalidConInt) {
-            assertFalse(Personnummer.valid(ssn));
-        }
+    @ParameterizedTest
+    @MethodSource("DataProvider#getValidPersonnummer")
+    public void testParse(PersonnummerData ssn) {
+        assertDoesNotThrow(() -> Personnummer.parse(ssn.longFormat, new Options(false)));
+        assertDoesNotThrow(() -> Personnummer.parse(ssn.shortFormat, new Options(false)));
+        assertDoesNotThrow(() -> Personnummer.parse(ssn.separatedFormat, new Options(false)));
+        assertDoesNotThrow(() -> Personnummer.parse(ssn.separatedFormat, new Options(false)));
     }
 
-    @Test
-    public void testPersonnNummerWithInvalidStringValues() {
-        for (String ssn: invalidSsnString) {
-            assertFalse(Personnummer.valid(ssn));
-        }
+    @ParameterizedTest
+    @MethodSource({"DataProvider#getValidCoordinationNumbers", "DataProvider#getValidPersonnummer"})
+    public void testParseCoord(PersonnummerData ssn) {
+        assertDoesNotThrow(() -> Personnummer.parse(ssn.longFormat, new Options(true)));
+        assertDoesNotThrow(() -> Personnummer.parse(ssn.shortFormat, new Options(true)));
+        assertDoesNotThrow(() -> Personnummer.parse(ssn.separatedFormat, new Options(true)));
+        assertDoesNotThrow(() -> Personnummer.parse(ssn.separatedFormat, new Options(true)));
     }
 
-    @Test
-    public void testCoordinationNummerWithInvalidStringValues() {
-        for (String ssn: invalidConString) {
-            assertFalse(Personnummer.valid(ssn));
-        }
+    @ParameterizedTest
+    @MethodSource({"DataProvider#getInvalidPersonnummer", "DataProvider#getValidCoordinationNumbers"})
+    public void testParseInvalid(PersonnummerData ssn) {
+        assertThrows(PersonnummerException.class, () -> Personnummer.parse(ssn.longFormat, new Options(false)));
+        assertThrows(PersonnummerException.class, () -> Personnummer.parse(ssn.shortFormat, new Options(false)));
+        assertThrows(PersonnummerException.class, () -> Personnummer.parse(ssn.separatedFormat, new Options(false)));
+        assertThrows(PersonnummerException.class, () -> Personnummer.parse(ssn.separatedFormat, new Options(false)));
     }
 
-    @Test
-    public void testPersonnNummerWithValidIntegerValues() {
-        for (Long ssn: validSsnInt) {
-            assertTrue(Personnummer.valid(ssn));
-        }
+    @ParameterizedTest
+    @MethodSource("DataProvider#getInvalidCoordinationNumbers")
+    public void testParseInvalidCoord(PersonnummerData ssn) {
+        assertThrows(PersonnummerException.class, () -> Personnummer.parse(ssn.longFormat, new Options(true)));
+        assertThrows(PersonnummerException.class, () -> Personnummer.parse(ssn.shortFormat, new Options(true)));
+        assertThrows(PersonnummerException.class, () -> Personnummer.parse(ssn.separatedFormat, new Options(true)));
+        assertThrows(PersonnummerException.class, () -> Personnummer.parse(ssn.separatedFormat, new Options(true)));
     }
 
-    @Test
-    public void testCoordinationNummerVnvalidIntegerValues() {
-        for (Long ssn: validConInt) {
-            assertTrue(Personnummer.valid(ssn));
-        }
+
+    @ParameterizedTest
+    @MethodSource({"DataProvider#getValidPersonnummer"})
+    public void testAge(PersonnummerData ssn) throws PersonnummerException {
+        LocalDate date = LocalDate.parse(ssn.longFormat.substring(0, ssn.longFormat.length() - 4), DateTimeFormatter.ofPattern("yyyyMMdd"));
+        int years = (date.until(LocalDate.now())).getYears();
+
+        assertEquals(years, Personnummer.parse(ssn.separatedLong, new Options(false)).getAge());
+        assertEquals(years, Personnummer.parse(ssn.separatedFormat, new Options(false)).getAge());
+        assertEquals(years, Personnummer.parse(ssn.longFormat, new Options(false)).getAge());
+        assertEquals(years > 99 ? years - 100 : years, Personnummer.parse(ssn.shortFormat, new Options(false)).getAge());
     }
 
-    @Test
-    public void testPersonnNummerWithValidStringValues() {
-        for (String ssn: validSsnString) {
-            assertTrue(Personnummer.valid(ssn));
-        }
+    @ParameterizedTest
+    @MethodSource({"DataProvider#getValidCoordinationNumbers"})
+    public void testAgeCn(PersonnummerData ssn) throws PersonnummerException {
+        String strDay = ssn.longFormat.substring(ssn.longFormat.length() - 6, ssn.longFormat.length() - 4);
+        int day = Integer.parseInt(strDay) - 60;
+        strDay = day < 10 ? "0" + Integer.toString(day) : Integer.toString(day);
+
+        LocalDate date = LocalDate.parse(ssn.longFormat.substring(0, ssn.longFormat.length() - 6) + strDay, DateTimeFormatter.ofPattern("yyyyMMdd"));
+        int years = (date.until(LocalDate.now())).getYears();
+
+        assertEquals(years, Personnummer.parse(ssn.separatedLong, new Options(true)).getAge());
+        assertEquals(years, Personnummer.parse(ssn.separatedFormat, new Options(true)).getAge());
+        assertEquals(years, Personnummer.parse(ssn.longFormat, new Options(true)).getAge());
+        assertEquals(years > 99 ? years - 100 : years, Personnummer.parse(ssn.shortFormat, new Options(true)).getAge());
     }
 
-    @Test
-    public void testCoordinationNummerWithValidStringValues() {
-        for (String ssn: validConString) {
-            assertTrue(Personnummer.valid(ssn));
-        }
+    @ParameterizedTest
+    @MethodSource({"DataProvider#getValidPersonnummer", "DataProvider#getValidCoordinationNumbers"})
+    public void testFormat(PersonnummerData ssn) throws PersonnummerException {
+        assertEquals(ssn.separatedFormat, Personnummer.parse(ssn.separatedLong, new Options(true)).format());
+        assertEquals(ssn.separatedFormat, Personnummer.parse(ssn.separatedFormat, new Options(true)).format());
+        assertEquals(ssn.separatedFormat, Personnummer.parse(ssn.longFormat, new Options(true)).format());
+    }
+
+    @ParameterizedTest
+    @MethodSource({"DataProvider#getValidPersonnummer", "DataProvider#getValidCoordinationNumbers"})
+    public void testFormatLong(PersonnummerData ssn) throws PersonnummerException {
+        assertEquals(ssn.longFormat, Personnummer.parse(ssn.separatedLong, new Options(true)).format(true));
+        assertEquals(ssn.longFormat, Personnummer.parse(ssn.separatedFormat, new Options(true)).format(true));
+        assertEquals(ssn.longFormat, Personnummer.parse(ssn.longFormat, new Options(true)).format(true));
+    }
+
+    @ParameterizedTest
+    @MethodSource({"DataProvider#getValidPersonnummer", "DataProvider#getValidCoordinationNumbers"})
+    public void testValid(PersonnummerData ssn) {
+        assertTrue(Personnummer.valid(ssn.longFormat));
+        assertTrue(Personnummer.valid(ssn.separatedLong));
+        assertTrue(Personnummer.valid(ssn.separatedFormat));
+        assertTrue(Personnummer.valid(ssn.shortFormat));
+    }
+
+    @ParameterizedTest
+    @MethodSource({"DataProvider#getInvalidPersonnummer", "DataProvider#getInvalidCoordinationNumbers"})
+    public void testValidInvalid(PersonnummerData ssn) {
+        assertFalse(Personnummer.valid(ssn.longFormat));
+        assertFalse(Personnummer.valid(ssn.separatedLong));
+        assertFalse(Personnummer.valid(ssn.separatedFormat));
+        assertFalse(Personnummer.valid(ssn.shortFormat));
+    }
+
+    @ParameterizedTest
+    @MethodSource({"DataProvider#getValidPersonnummer", "DataProvider#getValidCoordinationNumbers"})
+    public void testMaleFemale(PersonnummerData ssn) throws PersonnummerException {
+        assertEquals(ssn.isMale, Personnummer.parse(ssn.longFormat, new Options(true)).isMale());
+        assertEquals(ssn.isMale, Personnummer.parse(ssn.separatedLong, new Options(true)).isMale());
+        assertEquals(ssn.isMale, Personnummer.parse(ssn.separatedFormat, new Options(true)).isMale());
+        assertEquals(ssn.isMale, Personnummer.parse(ssn.shortFormat, new Options(true)).isMale());
+
+        assertEquals(ssn.isFemale, Personnummer.parse(ssn.longFormat, new Options(true)).isFemale());
+        assertEquals(ssn.isFemale, Personnummer.parse(ssn.separatedLong, new Options(true)).isFemale());
+        assertEquals(ssn.isFemale, Personnummer.parse(ssn.separatedFormat, new Options(true)).isFemale());
+        assertEquals(ssn.isFemale, Personnummer.parse(ssn.shortFormat, new Options(true)).isFemale());
+    }
+
+    @ParameterizedTest
+    @MethodSource({"DataProvider#getValidPersonnummer", "DataProvider#getValidCoordinationNumbers"})
+    public void testSeparator(PersonnummerData ssn) throws PersonnummerException {
+        String sep = ssn.separatedFormat.contains("+") ? "+" : "-";
+        assertEquals(sep, Personnummer.parse(ssn.longFormat, new Options(true)).separator());
+        assertEquals(sep, Personnummer.parse(ssn.separatedLong, new Options(true)).separator());
+        assertEquals(sep, Personnummer.parse(ssn.separatedFormat, new Options(true)).separator());
+        // Getting the separator from a short formatted none-separated person number is not actually possible if it is intended to be a +.
     }
 
 }
