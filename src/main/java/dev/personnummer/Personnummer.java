@@ -50,7 +50,7 @@ public final class Personnummer {
     private final boolean isMale;
 
     public boolean isMale() {
-        return this.isMale;
+        return isMale;
     }
 
     public boolean isFemale() {
@@ -90,7 +90,7 @@ public final class Personnummer {
     }
 
     public int getAge() {
-        return (LocalDate.of(Integer.parseInt(this.fullYear), Integer.parseInt(this.month), this.realDay).until(LocalDate.now())).getYears();
+        return (LocalDate.of(Integer.parseInt(fullYear), Integer.parseInt(month), realDay).until(LocalDate.now())).getYears();
     }
 
     /**
@@ -178,7 +178,7 @@ public final class Personnummer {
      * @return Formatted personal identity number.
      */
     public String format(boolean longFormat) {
-        return (longFormat ? this.fullYear : this.year) + this.month + this.day + (longFormat ? "" : separator()) + numbers;
+        return (longFormat ? fullYear : year) + month + day + (longFormat ? "" : separator()) + numbers;
     }
 
     /**
