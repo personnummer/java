@@ -216,7 +216,7 @@ public final class Personnummer {
             sum += temp;
         }
 
-        return (int)(Math.ceil((double)sum / 10.0) * 10.0 - (double)sum);
+        return (10 - (sum % 10)) % 10;
     }
 
 }
