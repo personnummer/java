@@ -1,6 +1,6 @@
 public class PersonnummerData {
 
-    public PersonnummerData(Long integer, String longFormat, String shortFormat, String separatedFormat, String separatedLong, Boolean valid, String type, Boolean isMale, Boolean isFemale) {
+    public PersonnummerData(long integer, String longFormat, String shortFormat, String separatedFormat, String separatedLong, boolean valid, String type, boolean isMale, boolean isFemale) {
         this.integer = integer;
         this.longFormat = longFormat;
         this.shortFormat = shortFormat;
@@ -12,14 +12,14 @@ public class PersonnummerData {
         this.isFemale = isFemale;
     }
 
-    public Long integer;
+    public long integer;
     public String longFormat;
     public String shortFormat;
     public String separatedFormat;
     public String separatedLong;
-    public Boolean valid;
+    public boolean valid;
     public String type;
-    public Boolean isMale;
+    public boolean isMale;
     public boolean isFemale;
 
 }

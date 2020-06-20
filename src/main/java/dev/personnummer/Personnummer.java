@@ -1,8 +1,7 @@
 package dev.personnummer;
 
 import java.time.LocalDate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
 /**
  * Class used to validate Swedish personal identity numbers.
