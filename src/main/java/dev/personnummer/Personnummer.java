@@ -49,14 +49,13 @@ public final class Personnummer {
     private final String numbers;
     private final String controlNumber;
     private final boolean isMale;
-    private final boolean isFemale;
 
-    public Boolean isMale() {
+    public boolean isMale() {
         return this.isMale;
     }
 
-    public Boolean isFemale() {
-        return this.isFemale;
+    public boolean isFemale() {
+        return !isMale();
     }
 
     public String separator() {
@@ -143,7 +142,6 @@ public final class Personnummer {
         this.controlNumber = matches.group(7);
 
         this.isMale =  Integer.parseInt(Character.toString(this.numbers.charAt(2))) % 2 == 1;
-        this.isFemale = !this.isMale;
 
         // The format passed to Luhn method is supposed to be YYmmDDNNN
         // Hence all numbers that are less than 10 (or in last case 100) will have leading 0's added.
