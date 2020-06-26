@@ -9,7 +9,7 @@ import java.util.regex.*;
  *
  * @author Johannes Tegnér
  */
-public final class Personnummer {
+public final class Personnummer implements Comparable<Personnummer> {
     private static final Pattern regexPattern;
 
     static {
@@ -241,6 +241,10 @@ public final class Personnummer {
 		Personnummer other = (Personnummer) obj;
 		return Objects.equals(format(true), other.format(true));
 	}
-    
+
+	@Override
+	public int compareTo(Personnummer other) {
+		return format(true).compareTo(other.format(true));
+	}
 
 }
