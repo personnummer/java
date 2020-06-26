@@ -1,6 +1,7 @@
 package dev.personnummer;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.regex.*;
 
 /**
@@ -215,5 +216,24 @@ public final class Personnummer {
 
         return (10 - (sum % 10)) % 10;
     }
+
+	@Override
+	public int hashCode() {
+		return format(true).hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Personnummer other = (Personnummer) obj;
+		return Objects.equals(format(true), other.format(true));
+	}
+    
+    
 
 }
