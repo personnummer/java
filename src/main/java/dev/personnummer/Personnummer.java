@@ -161,6 +161,11 @@ public final class Personnummer {
         this(personnummer, new Options());
     }
 
+	@Override
+	public String toString() {
+		return format();
+	}
+    
     /**
      * Format the personal identity number into a valid string (YYMMDD-/+XXXX)
      * If longFormat is true, it will include the century (YYYYMMDD-/+XXXX)
@@ -233,7 +238,6 @@ public final class Personnummer {
 		Personnummer other = (Personnummer) obj;
 		return Objects.equals(format(true), other.format(true));
 	}
-    
     
 
 }
