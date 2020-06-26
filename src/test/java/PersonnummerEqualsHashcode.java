@@ -31,4 +31,12 @@ class PersonnummerEqualsHashcode {
 		assertNotEquals(young2, other);
 	}
 	
+	@Test
+	void testToString() throws PersonnummerException {
+		
+		Personnummer young = new Personnummer("201701022384");
+		assertEquals("170102-2384", young.toString());
+		assertEquals(young.format(), young.toString());
+	}
+	
 }
