@@ -2,6 +2,8 @@ plugins {
     id 'maven-publish'
     id 'java-library'
     id 'java'
+    id 'maven'
+    id 'signing'
 }
 
 sourceCompatibility = 1.8
@@ -16,8 +18,8 @@ dependencies {
     testCompile('org.junit.jupiter:junit-jupiter:5.6.2', "org.json:json:20200518")
 }
 
-
 version = System.getenv("RELEASE_VERSION")
+
 jar {
     manifest {
         attributes('Implementation-Title': project.name,
@@ -25,12 +27,36 @@ jar {
     }
 }
 
+/*signing {
+    def signingKey = findProperty("signingKey")
+    def signingPassword = findProperty("signingPassword")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign configurations.archives
+}*/
+
+// ORG_GRADLE_PROJECT_signingPassword
+// ORG_GRADLE_PROJECT_signingKey
+
 test {
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
     }
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar, jar
 }
 
 publishing {
@@ -43,8 +69,23 @@ publishing {
                 password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
             }
         }
+        maven {
+            name = "OSSRH"
+            if (project.version.endsWith('-SNAPSHOT')) {
+                url "https://oss.sonatype.org/content/repositories/snapshots"
+            } else {
+                url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            }
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
     }
     publications {
+        mavenJava (MavenPublication) {
+
+        }
         gpr(MavenPublication) {
             version = System.getenv("RELEASE_VERSION")
             groupId = 'dev.personnummer'

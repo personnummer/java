@@ -22,6 +22,7 @@ public final class Personnummer implements Comparable<Personnummer> {
      *
      * @param personnummer Personal identity number as a string to create the object from.
      * @param options Options to use when creating the object.
+     * @return Personnummer
      * @throws PersonnummerException On parse error.
      */
     public static Personnummer parse(String personnummer, Options options) throws PersonnummerException {
@@ -33,6 +34,7 @@ public final class Personnummer implements Comparable<Personnummer> {
      * In case options is not passed, they will default to accept any personal and coordination numbers.
      *
      * @param personnummer Personal identity number as a string to create the object from.
+     * @return Personnummer
      * @throws PersonnummerException On parse error.
      */
     public static Personnummer parse(String personnummer) throws PersonnummerException {
@@ -165,7 +167,7 @@ public final class Personnummer implements Comparable<Personnummer> {
 	public String toString() {
 		return format();
 	}
-    
+
     /**
      * Format the personal identity number into a valid string (YYMMDD-/+XXXX)
      * If longFormat is true, it will include the century (YYYYMMDD-/+XXXX)
