@@ -27,15 +27,11 @@ jar {
     }
 }
 
-/*signing {
-    def signingKey = findProperty("signingKey")
-    def signingPassword = findProperty("signingPassword")
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign configurations.archives
-}*/
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 
-// ORG_GRADLE_PROJECT_signingPassword
-// ORG_GRADLE_PROJECT_signingKey
 
 test {
     useJUnitPlatform()
@@ -43,16 +39,6 @@ test {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
     }
-}
-
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
 }
 
 artifacts {
@@ -95,14 +81,17 @@ publishing {
         mavenJava (MavenPublication) {
             version = System.getenv("RELEASE_VERSION")
             groupId = 'dev.personnummer'
-
             from components.java
-        }
-        gpr(MavenPublication) {
-            version = System.getenv("RELEASE_VERSION")
-            groupId = 'dev.personnummer'
-
-            from components.java
+            pom {
+                name = 'Personnummer'
+                description = ''
+                url = 'https://personnummer.dev'
+                licenses {
+                    license {
+                        name = 'MIT'
+                    }
+                }
+            }
         }
     }
 }
