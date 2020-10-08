@@ -18,7 +18,7 @@ dependencies {
     testCompile('org.junit.jupiter:junit-jupiter:5.6.2', "org.json:json:20200518")
 }
 
-version = System.getenv("RELEASE_VERSION")
+version = System.getenv("RELEASE_VERSION") ?: 'NONE'
 
 jar {
     manifest {
@@ -27,9 +27,18 @@ jar {
     }
 }
 
-java {
-    withJavadocJar()
-    withSourcesJar()
+task javadocJar(type: Jar) {
+    archiveClassifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar, jar
 }
 
 
@@ -39,18 +48,6 @@ test {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
     }
-}
-
-artifacts {
-    archives javadocJar, sourcesJar, jar
-}
-
-signing {
-    required { gradle.taskGraph.hasTask("publish") }
-    def signingKey = System.getenv("SIGNING_KEY")
-    def signingPassword = System.getenv("SIGNING_PASSPHRASE")
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign configurations.archives
 }
 
 publishing {
@@ -93,4 +90,13 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    required { version != "NONE" }
+    sign publishing.publications.mavenJava
+}
+
+tasks.withType(Sign) {
+    onlyIf { version != "NONE" } // so we can build jars for testing in CI
 }
