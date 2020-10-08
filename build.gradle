@@ -59,6 +59,15 @@ artifacts {
     archives javadocJar, sourcesJar, jar
 }
 
+signing {
+    required { gradle.taskGraph.hasTask("publish") }
+    def signingKey = System.getenv("SIGNING_KEY")
+    def signingPassword = System.getenv("SIGNING_PASSPHRASE")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.mavenJava
+    sign publishing.publications.gpr
+}
+
 publishing {
     repositories {
         maven {
@@ -84,7 +93,10 @@ publishing {
     }
     publications {
         mavenJava (MavenPublication) {
+            version = System.getenv("RELEASE_VERSION")
+            groupId = 'dev.personnummer'
 
+            from components.java
         }
         gpr(MavenPublication) {
             version = System.getenv("RELEASE_VERSION")

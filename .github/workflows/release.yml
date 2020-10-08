@@ -8,12 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: 12
-
       - name: Build with Gradle
         run: gradle build
       - name: Set version
@@ -23,3 +21,7 @@ jobs:
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SIGNING_KEY: ${{ secrets.gpg_private_key }}
+          SIGNING_PASSPHRASE: ${{ secrets.gpg_passphrase }}
+          MAVEN_USERNAME: ${{ secrets.nexus_username }}
+          MAVEN_PASSWORD: ${{ secrets.nexus_password }}
