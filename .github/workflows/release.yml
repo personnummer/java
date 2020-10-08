@@ -21,7 +21,8 @@ jobs:
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SIGNING_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          SIGNING_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          ORG_GRADLE_PROJECT_signingKeyId: "4ED1648B5E695E6A"
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSPHRASE }}
           MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
