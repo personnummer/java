@@ -93,10 +93,9 @@ publishing {
 }
 
 signing {
-    def signingKeyId = "4ED1648B5E695E6A"
     def signingKey = findProperty("signingKey") ?: "key"
     def signingPassword = findProperty("signingPassword") ?: "pass"
-    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+    useInMemoryPgpKeys(signingKey, signingPassword)
     sign publishing.publications.mavenJava
 }
 
