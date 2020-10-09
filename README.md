@@ -6,7 +6,9 @@ Validate Swedish personal identity numbers.
 
 ## Installation
 
-Add the github repository as a Maven or Gradle repository:  
+Add the package to your maven or gradle configuration.  
+If you prefer to use the package from github rather than maven-central,
+add the repository as well.
 
 ```xml
 <dependency>
@@ -22,6 +24,9 @@ plugins {
 }
 
 repositories {
+    // If using maven central
+    mavenCentral()
+    // If you wish to use github
     maven {
       url "https://github.com/personnummer/java:personnummer"
     }
