@@ -19,28 +19,29 @@ dependencies {
 }
 
 version = System.getenv("RELEASE_VERSION") ?: 'NONE'
+group 'dev.personnummer'
 
 jar {
     manifest {
         attributes('Implementation-Title': project.name,
-                'Implementation-Version': project.version)
+                   'Implementation-Version': project.version)
     }
 }
 
-task javadocJar(type: Jar) {
-    archiveClassifier = 'javadoc'
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    archiveClassifier = 'sources'
-    from sourceSets.main.allSource
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 artifacts {
     archives javadocJar, sourcesJar, jar
 }
 
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
 
 test {
     useJUnitPlatform()
@@ -80,12 +81,24 @@ publishing {
             from components.java
             pom {
                 name = 'Personnummer'
-                description = ''
+                description = 'personnummer is a small open-source project that validates, formatting and determine sex and age from swedish personal identity numbers'
                 url = 'https://personnummer.dev'
                 licenses {
                     license {
                         name = 'MIT'
+                        url = 'https://mit-license.org/'
                     }
+                }
+                developers {
+                    developer {
+                        id = 'jite'
+                        name = 'Johannes Tegnér'
+                        email = 'johannes@jitesoft.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com:personnummer/java.git'
+                    url = 'https://github.com/personnummer/java'
                 }
             }
         }
@@ -101,5 +114,5 @@ signing {
 }
 
 tasks.withType(Sign) {
-    onlyIf { version != "NONE" } // so we can build jars for testing in CI
+    onlyIf { version != "NONE" }
 }
