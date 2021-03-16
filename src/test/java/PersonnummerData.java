@@ -12,6 +12,14 @@ public class PersonnummerData {
         this.isFemale = isFemale;
     }
 
+    public PersonnummerData(long integer, String shortFormat, String separatedFormat, boolean valid, String type) {
+        this.integer = integer;
+        this.shortFormat = shortFormat;
+        this.separatedFormat = separatedFormat;
+        this.valid = valid;
+        this.type = type;
+    }
+
     public long integer;
     public String longFormat;
     public String shortFormat;

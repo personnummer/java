@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 public class DataProvider {
     private static final List<PersonnummerData> all = new ArrayList<>();
+    private static final List<PersonnummerData> orgNr = new ArrayList<>();
 
     public static void initialize() throws IOException {
         InputStream in = new URL("https://raw.githubusercontent.com/personnummer/meta/master/testdata/list.json").openStream();
@@ -18,6 +19,7 @@ public class DataProvider {
         while ((line = reader.readLine()) != null) {
             json = json.concat(line);
         }
+        in.close();
         JSONArray rootObject = new JSONArray(json);
         for (int i = 0; i < rootObject.length(); i++) {
             JSONObject current = rootObject.getJSONObject(i);
@@ -31,6 +33,26 @@ public class DataProvider {
                     current.getString("type"),
                     current.getBoolean("isMale"),
                     current.getBoolean("isFemale")
+            ));
+        }
+
+        in = new URL("https://raw.githubusercontent.com/personnummer/meta/master/testdata/orgnumber.json").openStream();
+        reader = new BufferedReader(new InputStreamReader(in));
+        json = "";
+        while ((line = reader.readLine()) != null) {
+            json = json.concat(line);
+        }
+
+        in.close();
+        rootObject = new JSONArray(json);
+        for (int i = 0; i < rootObject.length(); i++) {
+            JSONObject current = rootObject.getJSONObject(i);
+            orgNr.add(new PersonnummerData(
+                    current.getLong("integer"),
+                    current.getString("short_format"),
+                    current.getString("separated_format"),
+                    current.getBoolean("valid"),
+                    current.getString("type")
             ));
         }
     }
@@ -52,6 +74,9 @@ public class DataProvider {
     }
     public static List<PersonnummerData> getValidPersonnummer() {
         return getPersonnummer().stream().filter(o -> o.valid).collect(Collectors.toList());
+    }
+    public static List<PersonnummerData> getOrganisationsnummer() {
+        return orgNr;
     }
 
 }
