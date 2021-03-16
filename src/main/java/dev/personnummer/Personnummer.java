@@ -1,6 +1,8 @@
 package dev.personnummer;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.regex.*;
 
@@ -142,6 +144,12 @@ public final class Personnummer implements Comparable<Personnummer> {
         this.day = matches.group(4);
         this.numbers = matches.group(6) + matches.group(7);
         this.controlNumber = matches.group(7);
+
+        try {
+            DateTimeFormatter.ofPattern("yyyy MM dd").parse(String.format("%s %s %02d", this.fullYear, this.month, this.realDay));
+        } catch (DateTimeParseException e) {
+            throw new PersonnummerException("Invalid personal identity number.");
+        }
 
         this.isMale =  Integer.parseInt(Character.toString(this.numbers.charAt(2))) % 2 == 1;
 

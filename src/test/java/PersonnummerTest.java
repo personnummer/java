@@ -175,4 +175,13 @@ public class PersonnummerTest {
         // Getting the separator from a short formatted none-separated person number is not actually possible if it is intended to be a +.
     }
 
+    @ParameterizedTest
+    @MethodSource("DataProvider#getOrganisationsnummer")
+    public void testOrgNummer(PersonnummerData ssn) {
+        assertThrows(PersonnummerException.class, () -> Personnummer.parse(ssn.shortFormat, new Options(true)));
+        assertThrows(PersonnummerException.class, () -> Personnummer.parse(ssn.shortFormat, new Options(false)));
+        assertThrows(PersonnummerException.class, () -> Personnummer.parse(ssn.separatedFormat, new Options(true)));
+        assertThrows(PersonnummerException.class, () -> Personnummer.parse(ssn.separatedFormat, new Options(false)));
+    }
+
 }
