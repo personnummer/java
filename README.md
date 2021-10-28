@@ -51,8 +51,8 @@ class Test
   public void TestValidation() 
   {
     Personnummer.valid("191212121212");    // => True
-    Personnummer.valid("12121+21212");     // => True
-    Personnummer.valid("2012121-21212");   // => True
+    Personnummer.valid("121212+1212");     // => True
+    Personnummer.valid("20121212-1212");   // => True
   }
 }
 ```
