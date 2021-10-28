@@ -37,10 +37,10 @@ public class PersonnummerTest {
     @ParameterizedTest
     @MethodSource({"DataProvider#getInvalidPersonnummer", "DataProvider#getValidCoordinationNumbers"})
     public void testConstructorInvalid(PersonnummerData ssn) {
-        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.longFormat, new Options(false)));
-        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.shortFormat, new Options(false)));
-        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.separatedFormat, new Options(false)));
-        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.separatedFormat, new Options(false)));
+        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.longFormat, new Options(false)), ssn.longFormat);
+        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.shortFormat, new Options(false)), ssn.shortFormat);
+        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.separatedFormat, new Options(false)), ssn.separatedFormat);
+        assertThrows(PersonnummerException.class, () -> new Personnummer(ssn.separatedLong, new Options(false)), ssn.separatedLong);
     }
 
     @ParameterizedTest
