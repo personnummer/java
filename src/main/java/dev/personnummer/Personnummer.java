@@ -15,7 +15,7 @@ public final class Personnummer implements Comparable<Personnummer> {
     private static final Pattern regexPattern;
 
     static {
-        regexPattern = Pattern.compile("^(\\d{2})?(\\d{2})(\\d{2})(\\d{2})([-|+]?)?((?!000)\\d{3})(\\d?)$");
+        regexPattern = Pattern.compile("^(\\d{2})?(\\d{2})(\\d{2})(\\d{2})([-+]?)?((?!000)\\d{3})(\\d?)$");
     }
 
     /**
