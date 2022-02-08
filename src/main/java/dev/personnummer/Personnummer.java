@@ -1,6 +1,8 @@
 package dev.personnummer;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
@@ -45,10 +47,10 @@ public final class Personnummer implements Comparable<Personnummer> {
 
 
     private final int realDay;
-    private final String fullYear;
+    private final Year fullYear;
     private final String century;
     private final String year;
-    private final String month;
+    private final Month month;
     private final String day;
     private final String numbers;
     private final String controlNumber;
@@ -66,7 +68,7 @@ public final class Personnummer implements Comparable<Personnummer> {
         return this.getAge() >= 100 ? "+" : "-";
     }
 
-    public String getFullYear() {
+    public Year getFullYear() {
         return fullYear;
     }
 
@@ -79,7 +81,8 @@ public final class Personnummer implements Comparable<Personnummer> {
     }
 
     public String getMonth() {
-        return month;
+        final int monthNumber = month.getValue();
+        return monthNumber < 10 ? "0" + monthNumber : Integer.toString(monthNumber);
     }
 
     public String getDay() {
@@ -95,7 +98,7 @@ public final class Personnummer implements Comparable<Personnummer> {
     }
 
     public int getAge() {
-        return (LocalDate.of(Integer.parseInt(fullYear), Integer.parseInt(month), realDay).until(LocalDate.now())).getYears();
+        return (LocalDate.of(fullYear.getValue(), month, realDay).until(LocalDate.now())).getYears();
     }
 
     /**
@@ -139,23 +142,24 @@ public final class Personnummer implements Comparable<Personnummer> {
         this.realDay = day;
         this.century = century;
         this.year = decade;
-        this.fullYear = century + decade;
-        this.month = matches.group(3);
+        this.fullYear = Year.of(Integer.parseInt(century + decade));
+        String tempMonth = matches.group(3);
         this.day = matches.group(4);
         this.numbers = matches.group(6) + matches.group(7);
         this.controlNumber = matches.group(7);
 
         try {
-            DateTimeFormatter.ofPattern("yyyy MM dd").parse(String.format("%s %s %02d", this.fullYear, this.month, this.realDay));
+            DateTimeFormatter.ofPattern("yyyy MM dd").parse(String.format("%s %s %02d", this.fullYear, tempMonth, this.realDay));
         } catch (DateTimeParseException e) {
             throw new PersonnummerException("Invalid personal identity number.");
         }
+        this.month = Month.of(Integer.parseInt(tempMonth));
 
         this.isMale =  Integer.parseInt(Character.toString(this.numbers.charAt(2))) % 2 == 1;
 
         // The format passed to Luhn method is supposed to be YYmmDDNNN
         // Hence all numbers that are less than 10 (or in last case 100) will have leading 0's added.
-        if (luhn(String.format("%s%s%s%s", this.year, this.month, this.day, matches.group(6))) != Integer.parseInt(this.controlNumber)) {
+        if (luhn(String.format("%s%s%s%s", this.year, this.getMonth(), this.day, matches.group(6))) != Integer.parseInt(this.controlNumber)) {
             throw new PersonnummerException("Invalid personal identity number.");
         }
     }
@@ -194,7 +198,7 @@ public final class Personnummer implements Comparable<Personnummer> {
      * @return Formatted personal identity number.
      */
     public String format(boolean longFormat) {
-        return (longFormat ? fullYear : year) + month + day + (longFormat ? "" : separator()) + numbers;
+        return (longFormat ? fullYear : year) + getMonth() + day + (longFormat ? "" : separator()) + numbers;
     }
 
     /**
