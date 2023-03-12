@@ -89,6 +89,15 @@ Personnummer.parse("1212121212").isFemale();
 //=> false
 ```
 
+### Get date
+
+```java
+(new Personnummer("1212121212")).getDate();
+//=> 2012-12-12T00:00
+(new Personnummer("9001010017")).getDate();
+//=> 1990-01-01T00:00
+```
+
 See `src/test//PersonnummerTest.java` for more examples.
 
 ## License
