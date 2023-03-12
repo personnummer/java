@@ -14,9 +14,12 @@ import java.util.regex.*;
  */
 public final class Personnummer implements Comparable<Personnummer> {
     private static final Pattern regexPattern;
+    private static final Pattern interimPatternTest;
+    private static final String interimTestStr = "(?![-+])\\D";
 
     static {
-        regexPattern = Pattern.compile("^(\\d{2})?(\\d{2})(\\d{2})(\\d{2})([-+]?)?((?!000)\\d{3})(\\d?)$");
+        regexPattern = Pattern.compile("^(\\d{2})?(\\d{2})(\\d{2})(\\d{2})([-+]?)?((?!000)\\d{3}|[TRSUWXJKLMN]\\d{2})(\\d?)$");
+        interimPatternTest = Pattern.compile(interimTestStr);
     }
 
     /**
@@ -112,6 +115,13 @@ public final class Personnummer implements Comparable<Personnummer> {
             throw new PersonnummerException("Failed to parse personal identity number. Invalid input.");
         }
 
+        if (!options.allowInterimNumbers && interimPatternTest.matcher(personnummer).find()) {
+            throw new PersonnummerException(
+                    personnummer +
+                    " contains non-integer characters and options are set to not allow interim numbers"
+            );
+        }
+
         Matcher matches = regexPattern.matcher(personnummer);
         if (!matches.find()) {
             throw new PersonnummerException("Failed to parse personal identity number. Invalid input.");
@@ -154,9 +164,14 @@ public final class Personnummer implements Comparable<Personnummer> {
 
         this.isMale =  Integer.parseInt(Character.toString(this.numbers.charAt(2))) % 2 == 1;
 
+        String nums = matches.group(6);
+        if (options.allowInterimNumbers) {
+            nums = nums.replaceFirst(interimTestStr, "1");
+        }
+
         // The format passed to Luhn method is supposed to be YYmmDDNNN
         // Hence all numbers that are less than 10 (or in last case 100) will have leading 0's added.
-        if (luhn(String.format("%s%s%s%s", this.year, this.month, this.day, matches.group(6))) != Integer.parseInt(this.controlNumber)) {
+        if (luhn(String.format("%s%s%s%s", this.year, this.month, this.day, nums)) != Integer.parseInt(this.controlNumber)) {
             throw new PersonnummerException("Invalid personal identity number.");
         }
     }
