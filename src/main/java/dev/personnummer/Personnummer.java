@@ -182,7 +182,7 @@ public final class Personnummer implements Comparable<Personnummer> {
 	 * @return DateTime object from the personnummer object
 	 */
 	public LocalDateTime getDate() {
-		return LocalDateTime.of(Integer.valueOf(year), java.time.Month.of(Integer.valueOf(month)), Integer.valueOf(realDay), 0, 0);
+		return LocalDateTime.of(Integer.valueOf(fullYear), java.time.Month.of(Integer.valueOf(month)), Integer.valueOf(realDay), 0, 0);
 	}
 
     /**
