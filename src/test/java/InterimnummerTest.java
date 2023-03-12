@@ -34,8 +34,8 @@ public class InterimnummerTest {
     public void testFormatLongInterim(PersonnummerData ssn) throws PersonnummerException {
         Personnummer pnr = Personnummer.parse(ssn.longFormat, opts);
 
-        assertEquals(pnr.format(false), ssn.longFormat);
-        assertEquals(pnr.format(), ssn.separatedFormat);
+        assertEquals(pnr.format(false), ssn.separatedFormat);
+        assertEquals(pnr.format(true), ssn.longFormat);
     }
 
     @ParameterizedTest
@@ -43,8 +43,8 @@ public class InterimnummerTest {
     public void testFormatShortInterim(PersonnummerData ssn) throws PersonnummerException {
         Personnummer pnr = Personnummer.parse(ssn.shortFormat, opts);
 
-        assertEquals(pnr.format(false), ssn.longFormat);
-        assertEquals(pnr.format(), ssn.separatedFormat);
+        assertEquals(pnr.format(false), ssn.separatedFormat);
+        assertEquals(pnr.format(true), ssn.longFormat);
     }
 
     @ParameterizedTest

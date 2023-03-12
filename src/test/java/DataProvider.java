@@ -71,11 +71,16 @@ public class DataProvider {
             JSONObject current = rootObject.getJSONObject(i);
             interimNr.add(new PersonnummerData(
                     current.getLong("integer"),
+                    current.getString("long_format"),
                     current.getString("short_format"),
                     current.getString("separated_format"),
+                    current.getString("separated_long"),
                     current.getBoolean("valid"),
-                    current.getString("type")
-            ));
+                    current.getString("type"),
+                    false, // ignore
+                    false // ignore
+                )
+            );
         }
     }
 
