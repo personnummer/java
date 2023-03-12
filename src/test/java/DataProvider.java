@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class DataProvider {
     private static final List<PersonnummerData> all = new ArrayList<>();
     private static final List<PersonnummerData> orgNr = new ArrayList<>();
+    private static final List<PersonnummerData> interimNr = new ArrayList<>();
 
     public static void initialize() throws IOException {
         InputStream in = new URL("https://raw.githubusercontent.com/personnummer/meta/master/testdata/list.json").openStream();
@@ -55,8 +56,38 @@ public class DataProvider {
                     current.getString("type")
             ));
         }
+
+
+        in = new URL("https://raw.githubusercontent.com/personnummer/meta/master/testdata/interim.json").openStream();
+        reader = new BufferedReader(new InputStreamReader(in));
+        json = "";
+        while ((line = reader.readLine()) != null) {
+            json = json.concat(line);
+        }
+
+        in.close();
+        rootObject = new JSONArray(json);
+        for (int i = 0; i < rootObject.length(); i++) {
+            JSONObject current = rootObject.getJSONObject(i);
+            interimNr.add(new PersonnummerData(
+                    current.getLong("integer"),
+                    current.getString("short_format"),
+                    current.getString("separated_format"),
+                    current.getBoolean("valid"),
+                    current.getString("type")
+            ));
+        }
     }
 
+    public static List<PersonnummerData> getInterimNumbers() {
+        return interimNr;
+    }
+    public static List<PersonnummerData> getValidInterimNumbers() {
+        return interimNr.stream().filter(o -> o.valid).collect(Collectors.toList());
+    }
+    public static List<PersonnummerData> getInvalidInterimNumbers() {
+        return interimNr.stream().filter(o -> !o.valid).collect(Collectors.toList());
+    }
     public static List<PersonnummerData> getCoordinationNumbers() {
         return all.stream().filter(o -> !o.type.equals("ssn")).collect(Collectors.toList());
     }
