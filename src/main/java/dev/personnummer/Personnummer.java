@@ -1,6 +1,7 @@
 package dev.personnummer;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
@@ -174,6 +175,14 @@ public final class Personnummer implements Comparable<Personnummer> {
 	@Override
 	public String toString() {
 		return format();
+	}
+	
+	/**
+	 *  get a DateTime object from the Peronnummer object's date values of Date Month and Time.
+	 * @return DateTime object from the personnummer object
+	 */
+	public LocalDateTime getDate() {
+		return LocalDateTime.of(Integer.valueOf(year), java.time.Month.of(Integer.valueOf(month)), Integer.valueOf(realDay), 0, 0);
 	}
 
     /**
