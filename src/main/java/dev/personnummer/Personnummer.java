@@ -204,8 +204,19 @@ public final class Personnummer implements Comparable<Personnummer> {
      * @return True if valid.
      */
     public static boolean valid(String personnummer) {
+        return valid(personnummer, new Options());
+    }
+
+    /**
+     * Validate a Swedish personal identity number.
+     *
+     * @param personnummer personal identity number to validate, as string.
+     * @param options options object.
+     * @return True if valid.
+     */
+    public static boolean valid(String personnummer, Options options) {
         try {
-            parse(personnummer);
+            parse(personnummer, options);
             return true;
         } catch (PersonnummerException ex) {
             return false;
