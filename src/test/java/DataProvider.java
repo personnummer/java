@@ -69,6 +69,11 @@ public class DataProvider {
     public static List<PersonnummerData> getInvalidPersonnummer() {
         return getPersonnummer().stream().filter(o -> !o.valid).collect(Collectors.toList());
     }
+    
+    public static List<PersonnummerData> getDate() {
+        return all.stream().filter(o -> o.valid).collect(Collectors.toList());
+    }
+    
     public static List<PersonnummerData> getValidCoordinationNumbers() {
         return getCoordinationNumbers().stream().filter(o -> o.valid).collect(Collectors.toList());
     }

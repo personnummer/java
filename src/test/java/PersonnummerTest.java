@@ -60,6 +60,15 @@ public class PersonnummerTest {
         assertDoesNotThrow(() -> Personnummer.parse(ssn.separatedFormat, new Options(false)));
         assertDoesNotThrow(() -> Personnummer.parse(ssn.separatedFormat, new Options(false)));
     }
+    
+    @ParameterizedTest
+    @MethodSource("DataProvider#getDate")
+    public void testDate(PersonnummerData ssn) {
+    	assertDoesNotThrow(() -> new Personnummer(ssn.longFormat, new Options()).getDate());
+        assertDoesNotThrow(() -> new Personnummer(ssn.shortFormat, new Options()).getDate());
+        assertDoesNotThrow(() -> new Personnummer(ssn.separatedFormat, new Options()).getDate());
+        assertDoesNotThrow(() -> new Personnummer(ssn.separatedFormat, new Options()).getDate());
+    }
 
     @ParameterizedTest
     @MethodSource({"DataProvider#getValidCoordinationNumbers", "DataProvider#getValidPersonnummer"})
