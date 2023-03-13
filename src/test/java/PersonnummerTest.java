@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import dev.personnummer.*;
 import org.junit.jupiter.api.BeforeAll;
@@ -64,10 +66,28 @@ public class PersonnummerTest {
     @ParameterizedTest
     @MethodSource("DataProvider#getDate")
     public void testDate(PersonnummerData ssn) {
-    	assertDoesNotThrow(() -> new Personnummer(ssn.longFormat, new Options()).getDate());
-        assertDoesNotThrow(() -> new Personnummer(ssn.shortFormat, new Options()).getDate());
-        assertDoesNotThrow(() -> new Personnummer(ssn.separatedFormat, new Options()).getDate());
-        assertDoesNotThrow(() -> new Personnummer(ssn.separatedFormat, new Options()).getDate());
+    	List<Personnummer> data = new ArrayList<>();
+		try {
+			data.add(new Personnummer(ssn.longFormat, new Options()));
+			data.add(new Personnummer(ssn.shortFormat, new Options()));
+			data.add(new Personnummer(ssn.separatedFormat, new Options()));
+			
+			data.forEach(entry -> {
+				assertDoesNotThrow(() -> entry.getDate());
+				
+				String expected = entry.getFullYear();
+//				Integer expected = Integer.valueOf(ssn.longFormat.substring(0,4));
+				String actual = String.valueOf(entry.getDate().getYear());
+				
+				assertEquals(expected, actual, "expected = " + expected + "\n" + "Actual = " + actual);
+			});
+			
+			
+			
+		} catch (PersonnummerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     @ParameterizedTest
