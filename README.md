@@ -1,6 +1,6 @@
 # Personnummer
 
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/personnummer/java/Test)](https://github.com/personnummer/java/actions)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/personnummer/java/test.yml?branch=master)](https://github.com/personnummer/java/actions)
 
 Validate Swedish personal identity numbers.
 
