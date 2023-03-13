@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,13 +74,25 @@ public class PersonnummerTest {
 			data.add(new Personnummer(ssn.separatedFormat, new Options()));
 			
 			data.forEach(entry -> {
+				
 				assertDoesNotThrow(() -> entry.getDate());
-				
-				String expected = entry.getFullYear();
+				LocalDateTime dateTime = entry.getDate();
+				String expectedYear = entry.getFullYear();
+				String expectedMonth = entry.getMonth();
+				if(expectedMonth.charAt(0)=='0')
+					expectedMonth = expectedMonth.substring(1);
+				String expectedDate = String.valueOf(entry.getRealDay());
+				if(expectedDate.charAt(0)=='0')
+					expectedDate = expectedDate.substring(1);
 //				Integer expected = Integer.valueOf(ssn.longFormat.substring(0,4));
-				String actual = String.valueOf(entry.getDate().getYear());
+				String actualYear = String.valueOf(dateTime.getYear());
+				String actualMonth = String.valueOf(dateTime.getMonth().getValue());
+				String actualDate = String.valueOf(dateTime.getDayOfMonth());
 				
-				assertEquals(expected, actual, "expected = " + expected + "\n" + "Actual = " + actual);
+				assertEquals(expectedYear, actualYear); //, "expected year = " + expectedYear + "\n" + "Actual year = " + actualYear);
+				assertEquals(expectedMonth, actualMonth);//, "expected month = " + expectedMonth + "\n" + "Actual month = " + actualMonth);
+				assertEquals(expectedDate, actualDate); //, "expected date = " + expectedDate + "\n" + "Actual date = " + actualDate);
+				
 			});
 			
 			
