@@ -10,10 +10,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
-        java: [ 8, 11, 16, 17 ]
+        java: [ 8, 11, 17, 19 ]
     name: Java ${{ matrix.java }} test.
     steps:
       - uses: actions/checkout@v3
