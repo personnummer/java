@@ -1,3 +1,4 @@
 name: "Java"
 maintainer: "@johannestegner"
 spec: "3.1"
+workflow: "test.yml"
