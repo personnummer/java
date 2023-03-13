@@ -1,16 +1,21 @@
 package dev.personnummer;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.regex.*;
 
+import lombok.Getter;
+
 /**
  * Class used to validate Swedish personal identity numbers.
  *
- * @author Johannes TegnÃ©r
+ * @author Johannes Tegnér
  */
+
+@Getter
 public final class Personnummer implements Comparable<Personnummer> {
     private static final Pattern regexPattern;
 
@@ -54,44 +59,12 @@ public final class Personnummer implements Comparable<Personnummer> {
     private final String controlNumber;
     private final boolean isMale;
 
-    public boolean isMale() {
-        return isMale;
-    }
-
     public boolean isFemale() {
-        return !isMale();
+    	return !isMale;
     }
 
     public String separator() {
         return this.getAge() >= 100 ? "+" : "-";
-    }
-
-    public String getFullYear() {
-        return fullYear;
-    }
-
-    public String getCentury() {
-        return century;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public String getMonth() {
-        return month;
-    }
-
-    public String getDay() {
-        return day;
-    }
-
-    public String getNumbers() {
-        return numbers;
-    }
-
-    public String getControlNumber() {
-        return controlNumber;
     }
 
     public int getAge() {
@@ -174,6 +147,14 @@ public final class Personnummer implements Comparable<Personnummer> {
 	@Override
 	public String toString() {
 		return format();
+	}
+	
+	/**
+	 *  get a DateTime object from the Peronnummer object's date values of Date Month and Time.
+	 * @return DateTime object from the personnummer object
+	 */
+	public LocalDateTime getDate() {
+		return LocalDateTime.of(Integer.valueOf(fullYear), java.time.Month.of(Integer.valueOf(month)), Integer.valueOf(realDay), 0, 0);
 	}
 
     /**
