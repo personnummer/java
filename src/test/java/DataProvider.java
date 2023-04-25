@@ -79,43 +79,50 @@ public class DataProvider {
                     current.getString("type"),
                     false, // ignore
                     false // ignore
-                )
-            );
+            ));
         }
     }
 
     public static List<PersonnummerData> getInterimNumbers() {
         return interimNr;
     }
+
     public static List<PersonnummerData> getValidInterimNumbers() {
         return interimNr.stream().filter(o -> o.valid).collect(Collectors.toList());
     }
+
     public static List<PersonnummerData> getInvalidInterimNumbers() {
         return interimNr.stream().filter(o -> !o.valid).collect(Collectors.toList());
     }
+
     public static List<PersonnummerData> getCoordinationNumbers() {
         return all.stream().filter(o -> !o.type.equals("ssn")).collect(Collectors.toList());
     }
+
     public static List<PersonnummerData> getPersonnummer() {
         return all.stream().filter(o -> o.type.equals("ssn")).collect(Collectors.toList());
     }
+
     public static List<PersonnummerData> getInvalidCoordinationNumbers() {
         return getCoordinationNumbers().stream().filter(o -> !o.valid).collect(Collectors.toList());
     }
+
     public static List<PersonnummerData> getInvalidPersonnummer() {
         return getPersonnummer().stream().filter(o -> !o.valid).collect(Collectors.toList());
     }
-    
+
     public static List<PersonnummerData> getDate() {
         return all.stream().filter(o -> o.valid).collect(Collectors.toList());
     }
-    
+
     public static List<PersonnummerData> getValidCoordinationNumbers() {
         return getCoordinationNumbers().stream().filter(o -> o.valid).collect(Collectors.toList());
     }
+
     public static List<PersonnummerData> getValidPersonnummer() {
         return getPersonnummer().stream().filter(o -> o.valid).collect(Collectors.toList());
     }
+
     public static List<PersonnummerData> getOrganisationsnummer() {
         return orgNr;
     }
