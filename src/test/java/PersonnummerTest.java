@@ -7,6 +7,7 @@ import java.util.List;
 
 import dev.personnummer.*;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -231,4 +232,11 @@ public class PersonnummerTest {
         assertThrows(PersonnummerException.class, () -> Personnummer.parse(ssn.separatedFormat, new Options(false)));
     }
 
+    @Test
+    void testLeapYear() {
+        assertEquals(
+                "Invalid personal identity number: Invalid date 'February 29' as '1985' is not a leap year",
+                assertThrows(PersonnummerException.class, () -> Personnummer.parse("8502291234")).getMessage()
+        );
+    }
 }
