@@ -258,10 +258,7 @@ public final class Personnummer implements Comparable<Personnummer> {
         for (int i = 0; i < value.length(); i++) {
             temp = Character.getNumericValue(value.charAt(i));
             temp *= 2 - (i % 2);
-            if (temp > 9)
-                temp -= 9;
-
-            sum += temp;
+            sum += 1 + (temp - 1) % 9;
         }
 
         return (10 - (sum % 10)) % 10;
