@@ -26,7 +26,7 @@ public final class Personnummer implements Comparable<Personnummer> {
      * In case options is not passed, they will default to accept any personal and coordination numbers.
      *
      * @param personnummer Personal identity number as a string to create the object from.
-     * @param options Options to use when creating the object.
+     * @param options      Options to use when creating the object.
      * @return Personnummer
      * @throws PersonnummerException On parse error.
      */
@@ -106,7 +106,7 @@ public final class Personnummer implements Comparable<Personnummer> {
      * In case options is not passed, they will default to accept any personal and coordination numbers.
      *
      * @param personnummer Personal identity number as a string to create the object from.
-     * @param options Options to use when creating the object.
+     * @param options      Options to use when creating the object.
      * @throws PersonnummerException On parse error.
      */
     public Personnummer(String personnummer, Options options) throws PersonnummerException {
@@ -117,7 +117,7 @@ public final class Personnummer implements Comparable<Personnummer> {
         if (!options.allowInterimNumbers && interimPatternTest.matcher(personnummer).find()) {
             throw new PersonnummerException(
                     personnummer +
-                    " contains non-integer characters and options are set to not allow interim numbers"
+                            " contains non-integer characters and options are set to not allow interim numbers"
             );
         }
 
@@ -128,7 +128,7 @@ public final class Personnummer implements Comparable<Personnummer> {
 
         String century;
         String decade = matches.group(2);
-        if (matches.group(1) != null &&  !matches.group(1).isEmpty()) {
+        if (matches.group(1) != null && !matches.group(1).isEmpty()) {
             century = matches.group(1);
         } else {
             int born = LocalDate.now().getYear() - Integer.parseInt(decade);
@@ -142,7 +142,7 @@ public final class Personnummer implements Comparable<Personnummer> {
         int day = Integer.parseInt(matches.group(4));
         if (options.allowCoordinationNumber) {
             day = day > 60 ? day - 60 : day;
-        } else if(day > 60) {
+        } else if (day > 60) {
             throw new PersonnummerException("Invalid personal identity number.");
         }
 
@@ -162,7 +162,7 @@ public final class Personnummer implements Comparable<Personnummer> {
             throw new PersonnummerException("Invalid personal identity number: " + e.getMessage());
         }
 
-        this.isMale =  Integer.parseInt(Character.toString(this.numbers.charAt(2))) % 2 == 1;
+        this.isMale = Integer.parseInt(Character.toString(this.numbers.charAt(2))) % 2 == 1;
 
         String nums = matches.group(6);
         if (options.allowInterimNumbers) {
@@ -187,18 +187,19 @@ public final class Personnummer implements Comparable<Personnummer> {
         this(personnummer, new Options());
     }
 
-	@Override
-	public String toString() {
-		return format();
-	}
+    @Override
+    public String toString() {
+        return format();
+    }
 
-	/**
-	 *  get a DateTime object from the Peronnummer object's date values of Date Month and Time.
-	 * @return DateTime object from the personnummer object
-	 */
-	public LocalDateTime getDate() {
-		return LocalDateTime.of(Integer.parseInt(fullYear), java.time.Month.of(Integer.parseInt(month)), realDay, 0, 0);
-	}
+    /**
+     * get a DateTime object from the Peronnummer object's date values of Date Month and Time.
+     *
+     * @return DateTime object from the personnummer object
+     */
+    public LocalDateTime getDate() {
+        return LocalDateTime.of(Integer.parseInt(fullYear), java.time.Month.of(Integer.parseInt(month)), realDay, 0, 0);
+    }
 
     /**
      * Format the personal identity number into a valid string (YYMMDD-/+XXXX)
@@ -235,7 +236,7 @@ public final class Personnummer implements Comparable<Personnummer> {
      * Validate a Swedish personal identity number.
      *
      * @param personnummer personal identity number to validate, as string.
-     * @param options options object.
+     * @param options      options object.
      * @return True if valid.
      */
     public static boolean valid(String personnummer, Options options) {
@@ -264,29 +265,29 @@ public final class Personnummer implements Comparable<Personnummer> {
         return (10 - (sum % 10)) % 10;
     }
 
-	@Override
-	public int hashCode() {
-		return format(true).hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return format(true).hashCode();
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Personnummer other = (Personnummer) obj;
-		return Objects.equals(format(true), other.format(true));
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Personnummer other = (Personnummer) obj;
+        return Objects.equals(format(true), other.format(true));
+    }
 
-	@Override
-	public int compareTo(Personnummer other) {
-		return format(true).compareTo(other.format(true));
-	}
+    @Override
+    public int compareTo(Personnummer other) {
+        return format(true).compareTo(other.format(true));
+    }
 
 }
