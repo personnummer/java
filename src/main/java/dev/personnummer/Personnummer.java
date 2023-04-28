@@ -141,7 +141,7 @@ public final class Personnummer implements Comparable<Personnummer> {
 
         int day = Integer.parseInt(matches.group(4));
         if (options.allowCoordinationNumber) {
-            day = day > 60 ? day - 60 : day;
+            day = 1 + (day - 1) % 60;
         } else if (day > 60) {
             throw new PersonnummerException("Invalid personal identity number.");
         }
