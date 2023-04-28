@@ -70,9 +70,9 @@ public class PersonnummerTest {
     public void testDate(PersonnummerData ssn) {
         List<Personnummer> data = new ArrayList<>();
         try {
-            data.add(new Personnummer(ssn.longFormat, new Options()));
-            data.add(new Personnummer(ssn.shortFormat, new Options()));
-            data.add(new Personnummer(ssn.separatedFormat, new Options()));
+            data.add(new Personnummer(ssn.longFormat, Options.DEFAULT));
+            data.add(new Personnummer(ssn.shortFormat, Options.DEFAULT));
+            data.add(new Personnummer(ssn.separatedFormat, Options.DEFAULT));
 
             data.forEach(entry -> {
 
