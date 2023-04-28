@@ -43,7 +43,7 @@ public final class Personnummer implements Comparable<Personnummer> {
      * @throws PersonnummerException On parse error.
      */
     public static Personnummer parse(String personnummer) throws PersonnummerException {
-        return parse(personnummer, new Options());
+        return parse(personnummer, Options.DEFAULT);
     }
 
 
@@ -184,7 +184,7 @@ public final class Personnummer implements Comparable<Personnummer> {
      * @throws PersonnummerException On parse error.
      */
     public Personnummer(String personnummer) throws PersonnummerException {
-        this(personnummer, new Options());
+        this(personnummer, Options.DEFAULT);
     }
 
     @Override
@@ -229,7 +229,7 @@ public final class Personnummer implements Comparable<Personnummer> {
      * @return True if valid.
      */
     public static boolean valid(String personnummer) {
-        return valid(personnummer, new Options());
+        return valid(personnummer, Options.DEFAULT);
     }
 
     /**

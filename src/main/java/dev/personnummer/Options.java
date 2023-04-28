@@ -1,6 +1,9 @@
 package dev.personnummer;
 
 public class Options {
+
+    public static final Options DEFAULT = new Options();
+
     public Options(boolean allowCoordinationNumber) {
         this.allowCoordinationNumber = allowCoordinationNumber;
         this.allowInterimNumbers = false;
