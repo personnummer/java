@@ -159,7 +159,7 @@ public final class Personnummer implements Comparable<Personnummer> {
             //noinspection ResultOfMethodCallIgnored
             LocalDate.of(Integer.parseInt(this.fullYear), Integer.parseInt(this.month), this.realDay);
         } catch (DateTimeException e) {
-            throw new PersonnummerException("Invalid personal identity number: " + e.getMessage());
+            throw new PersonnummerException("Invalid personal identity number: " + e.getMessage(), e);
         }
 
         this.isMale = Integer.parseInt(Character.toString(this.numbers.charAt(2))) % 2 == 1;
