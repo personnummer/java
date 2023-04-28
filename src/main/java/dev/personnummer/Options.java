@@ -1,6 +1,6 @@
 package dev.personnummer;
 
-public class Options {
+public final class Options {
 
     public static final Options DEFAULT = new Options();
 
