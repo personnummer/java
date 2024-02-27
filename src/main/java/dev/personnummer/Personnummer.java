@@ -203,7 +203,7 @@ public final class Personnummer implements Comparable<Personnummer> {
 
     /**
      * Format the personal identity number into a valid string (YYMMDD-/+XXXX)
-     * If longFormat is true, it will include the century (YYYYMMDD-/+XXXX)
+     * If longFormat is true, it will include the century (YYYYMMDDXXXX)
      *
      * @return Formatted personal identity number.
      */
@@ -213,7 +213,7 @@ public final class Personnummer implements Comparable<Personnummer> {
 
     /**
      * Format the personal identity number into a valid string (YYMMDD-/+XXXX)
-     * If longFormat is true, it will include the century (YYYYMMDD-/+XXXX)
+     * If longFormat is true, it will include the century (YYYYMMDDXXXX)
      *
      * @param longFormat If century should be included.
      * @return Formatted personal identity number.
