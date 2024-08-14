@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation('org.junit.jupiter:junit-jupiter:5.10.3', 'org.json:json:20240303')
+    testImplementation('org.junit.jupiter:junit-jupiter:5.11.0', 'org.json:json:20240303')
 }
 
 version = System.getenv("RELEASE_VERSION") ?: 'NONE'
