@@ -5,19 +5,18 @@ plugins {
     id 'signing'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation('org.junit.jupiter:junit-jupiter:5.12.0', 'org.json:json:20250107')
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.12.0'
+    testImplementation  'org.json:json:20250107'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 version = System.getenv("RELEASE_VERSION") ?: 'NONE'
-group 'dev.personnummer'
+group = 'dev.personnummer'
 
 jar {
     manifest {
@@ -29,6 +28,9 @@ jar {
 java {
     withJavadocJar()
     withSourcesJar()
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 }
 
 artifacts {
@@ -45,7 +47,7 @@ test {
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
-        exceptionFormat "full"
+        exceptionFormat = "full"
     }
 }
 
@@ -62,9 +64,9 @@ publishing {
         maven {
             name = "OSSRH"
             if (project.version.endsWith('-SNAPSHOT')) {
-                url "https://oss.sonatype.org/content/repositories/snapshots"
+                url = "https://oss.sonatype.org/content/repositories/snapshots"
             } else {
-                url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
             }
             credentials {
                 username = System.getenv("MAVEN_USERNAME")
