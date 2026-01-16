@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.14.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.14.2'
     testImplementation  'org.json:json:20250517'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
