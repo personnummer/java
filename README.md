@@ -100,6 +100,10 @@ Personnummer.parse("1212121212").isFemale();
 
 See `src/test//PersonnummerTest.java` for more examples.
 
+## In memoriam
+
+Fredrik "Frozzare" Forsmo (1991-2026) was the initiator, co-founder and a core contributor of the personnummer project. This library carries his work. He is missed.
+
 ## License
 
 [MIT](https://github.com/personnummer/java/blob/master/LICENSE)
