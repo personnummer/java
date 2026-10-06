@@ -13,7 +13,7 @@ public class DataProvider {
     private static final List<PersonnummerData> interimNr = new ArrayList<>();
 
     public static void initialize() throws IOException {
-        InputStream in = new URL("https://raw.githubusercontent.com/personnummer/meta/master/testdata/list.json").openStream();
+        InputStream in = new URL("https://raw.githubusercontent.com/personnummer/meta/HEAD/testdata/list.json").openStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String json = "";
         String line;
@@ -37,7 +37,7 @@ public class DataProvider {
             ));
         }
 
-        in = new URL("https://raw.githubusercontent.com/personnummer/meta/master/testdata/orgnumber.json").openStream();
+        in = new URL("https://raw.githubusercontent.com/personnummer/meta/HEAD/testdata/orgnumber.json").openStream();
         reader = new BufferedReader(new InputStreamReader(in));
         json = "";
         while ((line = reader.readLine()) != null) {
@@ -58,7 +58,7 @@ public class DataProvider {
         }
 
 
-        in = new URL("https://raw.githubusercontent.com/personnummer/meta/master/testdata/interim.json").openStream();
+        in = new URL("https://raw.githubusercontent.com/personnummer/meta/HEAD/testdata/interim.json").openStream();
         reader = new BufferedReader(new InputStreamReader(in));
         json = "";
         while ((line = reader.readLine()) != null) {
