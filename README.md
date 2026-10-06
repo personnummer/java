@@ -1,6 +1,6 @@
 # Personnummer
 
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/personnummer/java/test.yml?branch=master)](https://github.com/personnummer/java/actions)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/personnummer/java/test.yml?branch=main)](https://github.com/personnummer/java/actions)
 
 Validate Swedish personal identity numbers.
 
@@ -106,4 +106,4 @@ Fredrik "Frozzare" Forsmo (1991-2026) was the initiator, co-founder and a core c
 
 ## License
 
-[MIT](https://github.com/personnummer/java/blob/master/LICENSE)
+[MIT](https://github.com/personnummer/java/blob/main/LICENSE)
