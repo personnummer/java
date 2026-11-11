@@ -23,3 +23,14 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.java }}
       - run: gradle test
+
+  # Single stable check for branch protection, so the ruleset does not need
+  # to change when the matrix does.
+  tests-passed:
+    if: always()
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any test job failed or was cancelled
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1
